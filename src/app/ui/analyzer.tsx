@@ -6,7 +6,7 @@ import { Single } from "./single";
 import { Scrapper } from "./scrapper";
 
 type analyzerProps = {
-    type: "rule" | "ml" | "hybrid";
+  type: "rule" | "ml" | "hybrid";
 };
 
 export const Analyzer = (props: analyzerProps) => {
@@ -22,7 +22,7 @@ export const Analyzer = (props: analyzerProps) => {
   };
 
   return (
-    <div>
+    <div className="mt-6">
       <Switch
         label={label}
         labelPosition="after"
@@ -30,7 +30,7 @@ export const Analyzer = (props: analyzerProps) => {
         onChange={onChange}
       />
 
-      {!checked ? <Single type={props.type} /> : <Scrapper />}
+      {!checked ? <Single type={props.type} /> : <Scrapper type={props.type} />}
     </div>
   );
 };

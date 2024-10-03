@@ -220,7 +220,14 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
 
                         console.log("\n\n---------------------------\n\n");
 
-                        Results = [...Results, { sentence: part, pos: pos, neg: neg }];
+                        if (pos > neg * -1) {
+                            Results = [...Results, { sentence: part, pos: pos, neg: neg, sentiment: "positive" }];
+                        } else if (pos < neg * -1) {
+                            Results = [...Results, { sentence: part, pos: pos, neg: neg, sentiment: "negative" }];
+                        } else {
+                            Results = [...Results, { sentence: part, pos: pos, neg: neg, sentiment: "neutral" }];
+                        }
+
                     });
 
                 });
@@ -239,17 +246,71 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
     });
 };
 
+
+// const fetchSentimentData = async (company: string) => {
+//     const response = await fetch(`http://localhost:5000/sentiment/${company}`);
+//     const data = await response.json();
+
+//     let pos_score = 0;
+//     let neg_score = 0;
+//     let results = data['result'];
+
+//     results.forEach(review => {
+//       for (let key in review) {
+//         if (review.hasOwnProperty(key)) {
+//           review[key].forEach(scores => {
+//             scores.forEach(score => {
+//               if (score > 0) {
+//                 console.log(score);
+//                 pos_score += score;
+//               } else {
+//                 console.log(score);
+//                 neg_score += score;
+//               }
+//             });
+//           });
+//         }
+//       }
+//     });
+
+//     return {
+//       positive: pos_score / results.length,
+//       negative: neg_score / results.length,
+//       results: data
+//     };
+//   };
+
+const fetchReviews = async (company: string) => {
+    const response = await fetch(`http://192.168.0.140:5000/reviews/${company}`);
+    const data = await response.json();
+    return data;
+};
+
 export async function POST(req: NextRequest) {
     try {
-      const body = await req.json();
-      const { scores, results } = await analyzeSentiment(body.documents);
-      return NextResponse.json({ scores, results });
+        const body = await req.json();
+        const { scores, results } = await analyzeSentiment(body.documents);
+        return NextResponse.json({ scores, results });
     } catch (error) {
-      console.error('Error:', error);
-      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('Error:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
-  }
+}
 
 export async function GET(req: NextRequest) {
-    return NextResponse.json({ message: 'This is the sentiment analysis API' });
+    const { searchParams } = new URL(req.url);
+    const company = searchParams.get('company');
+
+    if (!company) {
+        return NextResponse.json({ error: 'Company name is required' }, { status: 400 });
+    }
+
+    try {
+        const reviews = await fetchReviews(company);
+        const sentimentData = await analyzeSentiment(reviews[company]?.map((review: { text: any; }) => ({ text: review.text })));
+        return NextResponse.json(sentimentData);
+    } catch (error) {
+        console.error('Error:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
 }
