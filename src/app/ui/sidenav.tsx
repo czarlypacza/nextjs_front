@@ -35,6 +35,9 @@ const useStyles = makeStyles({
     display: "flex",
     height: "100%",
     borderRadius: tokens.borderRadiusMedium,
+    zIndex: 1000,
+    opacity: 0.92,
+    position: "relative",
   },
   content: {
     flex: "1",
@@ -42,6 +45,7 @@ const useStyles = makeStyles({
     display: "grid",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    zIndex: 1000,
   },
   field: {
     display: "flex",
@@ -52,6 +56,7 @@ const useStyles = makeStyles({
   },
   nav: {
     borderRadius: tokens.borderRadiusXLarge,
+    zIndex: 1000,
   },
 });
 
@@ -118,6 +123,7 @@ export const NavDrawerDefault = () => {
         type={"inline"}
         multiple={true}
         className={styles.nav}
+        id="sidenav-id"
       >
         <NavDrawerHeader>
           {renderHamburgerWithToolTip()}

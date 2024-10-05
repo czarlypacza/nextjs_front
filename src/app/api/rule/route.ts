@@ -7,6 +7,7 @@ import { afinn165 } from 'afinn-165'
 const posTagger = require('wink-pos-tagger');
 
 
+
 const stopwords = ['a', 'an', 'the', 'in', 'is', 'are', /*...other stopwords...*/];
 const contrastiveConjunctions = ['but', 'however', 'although', 'nevertheless', 'yet', 'except', 'though'];
 

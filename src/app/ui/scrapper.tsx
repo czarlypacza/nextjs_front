@@ -1,65 +1,83 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Card,
   CardHeader,
   Body1,
-  Textarea,
   CardFooter,
   Button,
-  TextareaProps,
   Input,
   Body1Strong,
+  Text,
+  Body1Stronger,
 } from "@fluentui/react-components";
 import {
   BeakerSettingsFilled,
   DeleteDismissFilled,
 } from "@fluentui/react-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "./table";
 
 type singleProps = {
   type: "rule" | "ml" | "hybrid";
+  result: any;
+  setResult: (result: any) => void;
+  value: string;
+  setValue: (value: string) => void;
 };
 
 export const Scrapper = (props: singleProps) => {
-  const [value, setValue] = React.useState("");
+  //const [value, setValue] = React.useState("");
 
-  const [result, setResult] = React.useState([]);
+  //const [result, setResult] = React.useState([]);
   const [positive, setPositive] = React.useState(0);
   const [negative, setNegative] = React.useState(0);
 
   const onChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
-    setValue(data.value);
+    props.setValue(data.value.toString());
   };
 
-  async function hybrid_click() {
-    const response = await fetch(`/api/sentiment?company=${value}`);
+  useEffect(() => {
+    let pos = 0;
+    let neg = 0;
+
+    props.result.map((item: { pos: any; neg: any }) => {
+      pos += item.pos;
+      neg += item.neg;
+    });
+
+    setPositive(pos / (props.result.length ? props.result.length : 1));
+    setNegative(neg / (props.result.length ? props.result.length : 1));
+  }, [props.result]);
+
+  async function rule_click() {
+    const response = await fetch(`/api/rule?company=${props.value}`);
     const data = await response.json();
 
-    setResult(data.results);
-    setPositive(
-      data.scores.reduce((acc, score) => acc + score.pos, 0) /
-        data.scores.length
-    );
-    setNegative(
-      data.scores.reduce((acc, score) => acc + score.neg, 0) /
-        data.scores.length
-    );
+    props.setResult(data.results);
+  }
+
+  async function hybrid_click() {
+    const response = await fetch(`/api/hybrid?company=${props.value}`);
+    const data = await response.json();
+
+    props.setResult(data.results);
   }
 
   const analyze = () => {
-    if (!value) {
+    if (!props.value) {
       return;
     }
     if (props.type === "rule") {
-      hybrid_click();
+      rule_click();
     } else if (props.type === "ml") {
     } else {
+      hybrid_click();
     }
   };
 
   const clear = () => {
-    setValue("");
-    setResult([]);
+    props.setValue("");
+    props.setResult([]);
     setPositive(0);
     setNegative(0);
   };
@@ -69,11 +87,13 @@ export const Scrapper = (props: singleProps) => {
       <Card className="ml-20 mr-40">
         <CardHeader
           header={
-            <Body1>Input name of company you want to analyze. woodcore</Body1>
+            <Text size={500} weight="semibold">
+              Input name of company you want to analyze. woodcore
+            </Text>
           }
         />
         <Input
-          value={value}
+          value={props.value}
           onChange={onChange}
           size="large"
           placeholder="Type here ..."
@@ -83,6 +103,7 @@ export const Scrapper = (props: singleProps) => {
           <Button
             icon={<BeakerSettingsFilled fontSize={16} />}
             onClick={analyze}
+            appearance="primary"
           >
             Analyze
           </Button>
@@ -92,18 +113,36 @@ export const Scrapper = (props: singleProps) => {
         </CardFooter>
       </Card>
 
-      <div className="flex justify-center gap-5">
-        <Card>
-          <Body1>Positive</Body1>
-          <Body1Strong>{positive}</Body1Strong>
+      {props.result.length === 0 ? (
+        <Card className="w-28 m-auto">
+          <Body1Stronger>No results</Body1Stronger>
         </Card>
-        <Card>
-          <Body1>Negative</Body1>
-          <Body1Strong>{negative}</Body1Strong>
-        </Card>
-      </div>
+      ) : (
+        <>
+          <div className="flex justify-center gap-5">
+            <Card className="flex flex-col items-center">
+              <Body1>Positive</Body1>
+              <Body1Strong>{positive}</Body1Strong>
+            </Card>
+            <Card className="flex flex-col items-center">
+              <Body1>Negative</Body1>
+              <Body1Strong>{negative}</Body1Strong>
+            </Card>
+            <Card className="flex flex-col items-center">
+              <Body1>Sentiment</Body1>
+              <Body1Strong>
+                {positive > negative * -1
+                  ? "Positive"
+                  : positive < negative * -1
+                  ? "Negative"
+                  : "Neutral"}
+              </Body1Strong>
+            </Card>
+          </div>
 
-      <Table items={result} />
+          <Table items={props.result} />
+        </>
+      )}
     </div>
   );
 };

@@ -87,11 +87,11 @@ export const Selectable = (props: selectableProps) => {
             src={resolveAsset("office1.png")}
             alt="Presentation Preview"
           /> */}
-        <Text size={400}>{props.text}</Text>
+        <Text size={500}>{props.text}</Text>
       </CardPreview>
 
       <CardHeader
-        header={<Text weight="semibold">{props.children}</Text>}
+        header={<Text weight="semibold" size={500}>{props.children}</Text>}
         image={
           props.logo ? (
             <div className={styles.logoBadge}>{props.logo}</div>

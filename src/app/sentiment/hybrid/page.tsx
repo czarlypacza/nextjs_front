@@ -1,3 +1,4 @@
+import { Analyzer } from "@/app/ui/analyzer";
 import { Breadcrumbs } from "@/app/ui/breadcrumb";
 import { HybridFilled } from "@/app/ui/sidenav";
 
@@ -12,7 +13,7 @@ export default async function Page() {
     return (
       <main>
         <Breadcrumbs breadcrumbs={breadcrumbs}></Breadcrumbs>
-        
+        <Analyzer type="hybrid"/>
       </main>
     );
   }

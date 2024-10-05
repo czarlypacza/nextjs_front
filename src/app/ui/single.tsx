@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Card,
   CardFooter,
@@ -7,6 +8,8 @@ import {
   CardHeader,
   Body1,
   Body1Strong,
+  Text,
+  Body1Stronger,
 } from "@fluentui/react-components";
 import {
   BeakerSettingsFilled,
@@ -17,6 +20,10 @@ import { Table } from "./table";
 
 type singleProps = {
   type: "rule" | "ml" | "hybrid";
+  result: any;
+  setResult: (result: any) => void;
+  value: string;
+  setValue: (value: string) => void;
 };
 
 type Documents = {
@@ -25,10 +32,18 @@ type Documents = {
   language: string;
 };
 
-export const Single = (props: singleProps) => {
-  const [value, setValue] = React.useState("");
+// const useStyles = makeStyles({
+//   button: {
+//     color: tokens.colorBrandStroke1,
+//   },
+// });
 
-  const [result, setResult] = React.useState([]);
+export const Single = (props: singleProps) => {
+  //const style = useStyles();
+
+  //const [value, setValue] = React.useState("");
+
+  // const [result, setResult] = React.useState([]);
   const [positive, setPositive] = React.useState(0);
   const [negative, setNegative] = React.useState(0);
 
@@ -36,21 +51,21 @@ export const Single = (props: singleProps) => {
     let pos = 0;
     let neg = 0;
 
-    result.map((item) => {
+    props.result.map((item: { pos: number; neg: number; }) => {
       pos += item.pos;
       neg += item.neg;
     });
 
-    setPositive(pos / (result.length ? result.length : 1));
-    setNegative(neg / (result.length ? result.length : 1));
-  }, [result]);
+    setPositive(pos / (props.result.length ? props.result.length : 1));
+    setNegative(neg / (props.result.length ? props.result.length : 1));
+  }, [props.result]);
 
   const onChange: TextareaProps["onChange"] = (ev, data) => {
-    setValue(data.value);
+    props.setValue(data.value);
   };
 
   const analyzeSentiment = async (documents: Documents[]) => {
-    const response = await fetch("/api/sentiment", {
+    const response = await fetch("/api/rule", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,24 +81,44 @@ export const Single = (props: singleProps) => {
     return data.results;
   };
 
+  const sentimentHybrid = async (text: string) => {
+    const response = await fetch("/api/hybrid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: text }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    return data.results;
+  };
+
   const analyze = () => {
-    if (!value) {
+    if (!props.value) {
       return;
     }
     if (props.type === "rule") {
-      analyzeSentiment([{ id: 1, text: value, language: "en" }]).then(
+      analyzeSentiment([{ id: 1, text: props.value, language: "en" }]).then(
         (data) => {
-          setResult(data);
+          props.setResult(data);
         }
       );
     } else if (props.type === "ml") {
     } else {
+      sentimentHybrid(props.value).then((data) => {
+        props.setResult(data);
+      });
     }
   };
 
   const clear = () => {
-    setValue("");
-    setResult([]);
+    props.setValue("");
+    props.setResult([]);
     setPositive(0);
     setNegative(0);
   };
@@ -93,23 +128,25 @@ export const Single = (props: singleProps) => {
       <Card>
         <CardHeader
           header={
-            <Body1>
+            <Text size={500} weight="semibold">
               Input sentence you want to analyze. sample love positive. sample
               neutral
-            </Body1>
+              {/* I can’t believe how amazing this day has been! The weather is just perfect today. I’m feeling a bit under the weather. This movie was absolutely fantastic! I’m not sure how I feel about this. The food at that restaurant was terrible. I had a wonderful time at the party. I’m really disappointed with the service. This book is so captivating! I don’t have any strong feelings about this. The concert was an unforgettable experience. I’m feeling quite neutral about the whole situation. The customer support was very helpful. I’m not impressed with the new update. This is the best coffee I’ve ever had! I’m feeling indifferent about the results. The new policy changes are very frustrating. I’m so excited for the weekend! The presentation was just okay. I’m really happy with my purchase. */}
+            </Text>
           }
         />
         <Textarea
           className="h-56"
           placeholder="Type here ..."
           size="large"
-          value={value}
+          value={props.value}
           onChange={onChange}
         />
         <CardFooter>
           <Button
             icon={<BeakerSettingsFilled fontSize={16} />}
             onClick={analyze}
+            appearance="primary"
           >
             Analyze
           </Button>
@@ -119,18 +156,36 @@ export const Single = (props: singleProps) => {
         </CardFooter>
       </Card>
 
-      <div className="flex justify-center gap-5">
-        <Card>
-          <Body1>Positive</Body1>
-          <Body1Strong>{positive}</Body1Strong>
+      {props.result.length === 0 ? (
+        <Card className="w-28 m-auto">
+          <Body1Stronger>No results</Body1Stronger>
         </Card>
-        <Card>
-          <Body1>Negative</Body1>
-          <Body1Strong>{negative}</Body1Strong>
-        </Card>
-      </div>
+      ) : (
+        <>
+          <div className="flex justify-center gap-5">
+            <Card className="flex flex-col items-center">
+              <Body1>Positive</Body1>
+              <Body1Strong>{positive}</Body1Strong>
+            </Card>
+            <Card className="flex flex-col items-center">
+              <Body1>Negative</Body1>
+              <Body1Strong>{negative}</Body1Strong>
+            </Card>
+            <Card className="flex flex-col items-center">
+              <Body1>Sentiment</Body1>
+              <Body1Strong>
+                {positive > negative * -1
+                  ? "Positive"
+                  : positive < negative * -1
+                  ? "Negative"
+                  : "Neutral"}
+              </Body1Strong>
+            </Card>
+          </div>
 
-      <Table items={result} />
+          <Table items={props.result} />
+        </>
+      )}
 
       {/* {result.map((item, index) => (
           <Card key={index}>

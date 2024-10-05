@@ -13,6 +13,12 @@ export const Analyzer = (props: analyzerProps) => {
   const [checked, setChecked] = React.useState(false);
   const [label, setLabel] = React.useState("Single sentence");
 
+  const [resultSingle, setResultSingle] = React.useState([]);
+  const [valueSingle, setValueSingle] = React.useState("");
+
+  const [resultScrapper, setResultScrapper] = React.useState([]);
+  const [valueScrapper, setValueScrapper] = React.useState("");
+
   const onChange = (
     ev: React.ChangeEvent<HTMLInputElement>,
     data: SwitchOnChangeData
@@ -30,7 +36,23 @@ export const Analyzer = (props: analyzerProps) => {
         onChange={onChange}
       />
 
-      {!checked ? <Single type={props.type} /> : <Scrapper type={props.type} />}
+      {!checked ? (
+        <Single
+          result={resultSingle}
+          setResult={setResultSingle}
+          type={props.type}
+          value={valueSingle}
+          setValue={setValueSingle}
+        />
+      ) : (
+        <Scrapper
+          result={resultScrapper}
+          setResult={setResultScrapper}
+          type={props.type}
+          value={valueScrapper}
+          setValue={setValueScrapper}
+        />
+      )}
     </div>
   );
 };
