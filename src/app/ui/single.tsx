@@ -15,8 +15,10 @@ import {
   BeakerSettingsFilled,
   DeleteDismissFilled,
 } from "@fluentui/react-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "./table";
+import { Results } from "./results";
+import ResultsSkeleton from "./skeletons/resultsSkeleton";
 
 type singleProps = {
   type: "rule" | "ml" | "hybrid";
@@ -43,6 +45,8 @@ export const Single = (props: singleProps) => {
 
   //const [value, setValue] = React.useState("");
 
+  const [loading, setLoading] = useState(false);
+
   // const [result, setResult] = React.useState([]);
   const [positive, setPositive] = React.useState(0);
   const [negative, setNegative] = React.useState(0);
@@ -65,6 +69,8 @@ export const Single = (props: singleProps) => {
   };
 
   const analyzeSentiment = async (documents: Documents[]) => {
+    setLoading(true);
+
     const response = await fetch("/api/rule", {
       method: "POST",
       headers: {
@@ -82,6 +88,7 @@ export const Single = (props: singleProps) => {
   };
 
   const sentimentHybrid = async (text: string) => {
+    setLoading(true);
     const response = await fetch("/api/hybrid", {
       method: "POST",
       headers: {
@@ -106,12 +113,14 @@ export const Single = (props: singleProps) => {
       analyzeSentiment([{ id: 1, text: props.value, language: "en" }]).then(
         (data) => {
           props.setResult(data);
+          setLoading(false);
         }
       );
     } else if (props.type === "ml") {
     } else {
       sentimentHybrid(props.value).then((data) => {
         props.setResult(data);
+        setLoading(false);
       });
     }
   };
@@ -156,44 +165,19 @@ export const Single = (props: singleProps) => {
         </CardFooter>
       </Card>
 
-      {props.result.length === 0 ? (
+      {(props.result.length === 0 && loading == false)? (
         <Card className="w-28 m-auto">
           <Body1Stronger>No results</Body1Stronger>
         </Card>
       ) : (
-        <>
-          <div className="flex justify-center gap-5">
-            <Card className="flex flex-col items-center">
-              <Body1>Positive</Body1>
-              <Body1Strong>{positive}</Body1Strong>
-            </Card>
-            <Card className="flex flex-col items-center">
-              <Body1>Negative</Body1>
-              <Body1Strong>{negative}</Body1Strong>
-            </Card>
-            <Card className="flex flex-col items-center">
-              <Body1>Sentiment</Body1>
-              <Body1Strong>
-                {positive > negative * -1
-                  ? "Positive"
-                  : positive < negative * -1
-                  ? "Negative"
-                  : "Neutral"}
-              </Body1Strong>
-            </Card>
-          </div>
 
-          <Table items={props.result} />
-        </>
+        loading == true ? (  
+          <ResultsSkeleton  />
+        ):(
+          <Results positive={positive} negative={negative} result={props.result} />
+        )
+        
       )}
-
-      {/* {result.map((item, index) => (
-          <Card key={index}>
-            <Body1>{item.sentence} | </Body1>
-            <Body1>Positive: {item.pos} | </Body1>
-            <Body1>Negative: {item.neg}</Body1>
-          </Card>
-        ))} */}
     </div>
   );
 };

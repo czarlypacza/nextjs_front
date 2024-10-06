@@ -40,6 +40,14 @@ body {
   }
 }
 
+@keyframes shimmer {
+
+  100% {
+    content: var(--tw-content);
+    transform: translateX(100%);
+  }
+}
+
 
 .icon-transition {
   transition: all 0.3s ease-in-out;

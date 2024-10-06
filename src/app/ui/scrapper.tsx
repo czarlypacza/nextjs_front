@@ -14,8 +14,10 @@ import {
   BeakerSettingsFilled,
   DeleteDismissFilled,
 } from "@fluentui/react-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "./table";
+import { Results } from "./results";
+import ResultsSkeleton from "./skeletons/resultsSkeleton";
 
 type singleProps = {
   type: "rule" | "ml" | "hybrid";
@@ -27,6 +29,7 @@ type singleProps = {
 
 export const Scrapper = (props: singleProps) => {
   //const [value, setValue] = React.useState("");
+  const [loading, setLoading] = useState(false);
 
   //const [result, setResult] = React.useState([]);
   const [positive, setPositive] = React.useState(0);
@@ -50,17 +53,21 @@ export const Scrapper = (props: singleProps) => {
   }, [props.result]);
 
   async function rule_click() {
+    setLoading(true);
     const response = await fetch(`/api/rule?company=${props.value}`);
     const data = await response.json();
 
     props.setResult(data.results);
+    return data;
   }
 
   async function hybrid_click() {
+    setLoading(true);
     const response = await fetch(`/api/hybrid?company=${props.value}`);
     const data = await response.json();
 
     props.setResult(data.results);
+    return data;
   }
 
   const analyze = () => {
@@ -68,10 +75,10 @@ export const Scrapper = (props: singleProps) => {
       return;
     }
     if (props.type === "rule") {
-      rule_click();
+      rule_click().then(() => setLoading(false));
     } else if (props.type === "ml") {
     } else {
-      hybrid_click();
+      hybrid_click().then(() => setLoading(false));;
     }
   };
 
@@ -113,35 +120,16 @@ export const Scrapper = (props: singleProps) => {
         </CardFooter>
       </Card>
 
-      {props.result.length === 0 ? (
+      {(props.result.length === 0 && loading == false)? (
         <Card className="w-28 m-auto">
           <Body1Stronger>No results</Body1Stronger>
         </Card>
       ) : (
-        <>
-          <div className="flex justify-center gap-5">
-            <Card className="flex flex-col items-center">
-              <Body1>Positive</Body1>
-              <Body1Strong>{positive}</Body1Strong>
-            </Card>
-            <Card className="flex flex-col items-center">
-              <Body1>Negative</Body1>
-              <Body1Strong>{negative}</Body1Strong>
-            </Card>
-            <Card className="flex flex-col items-center">
-              <Body1>Sentiment</Body1>
-              <Body1Strong>
-                {positive > negative * -1
-                  ? "Positive"
-                  : positive < negative * -1
-                  ? "Negative"
-                  : "Neutral"}
-              </Body1Strong>
-            </Card>
-          </div>
-
-          <Table items={props.result} />
-        </>
+        loading == true ? (  
+          <ResultsSkeleton  />
+        ):(
+          <Results positive={positive} negative={negative} result={props.result} />
+        )
       )}
     </div>
   );

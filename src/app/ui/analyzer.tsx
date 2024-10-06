@@ -4,6 +4,7 @@ import { Switch, SwitchOnChangeData } from "@fluentui/react-components";
 import React from "react";
 import { Single } from "./single";
 import { Scrapper } from "./scrapper";
+import ResultsSkeleton from "./skeletons/resultsSkeleton";
 
 type analyzerProps = {
   type: "rule" | "ml" | "hybrid";
@@ -53,6 +54,8 @@ export const Analyzer = (props: analyzerProps) => {
           setValue={setValueScrapper}
         />
       )}
+
+      {/* <ResultsSkeleton /> */}
     </div>
   );
 };
