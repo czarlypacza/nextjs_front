@@ -9,7 +9,7 @@ const BreadcrumbsSkeleton = () => {
     // <Skeleton className='w-10'>
     //     <SkeletonItem size={28} />
     // </Skeleton>
-    <div className={`${shimmer} relative w-auto overflow-hidden md:col-span-4 w-fit`}>
+    <div className={`${shimmer} relative overflow-hidden md:col-span-4 w-fit`}>
       {/* <div className="mb-4 h-8 w-36 rounded-md bg-gray-100" /> */}
       <div className="rounded-md  bg-opacity-55 w-fit p-1">
         {/* <div className="mt-0 grid h-[410px] grid-cols-12 items-end gap-2 rounded-md bg-white p-4 sm:grid-cols-13 md:gap-4" /> */}

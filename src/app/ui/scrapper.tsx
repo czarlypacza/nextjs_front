@@ -2,11 +2,9 @@
 import {
   Card,
   CardHeader,
-  Body1,
   CardFooter,
   Button,
   Input,
-  Body1Strong,
   Text,
   Body1Stronger,
 } from "@fluentui/react-components";
@@ -15,7 +13,6 @@ import {
   DeleteDismissFilled,
 } from "@fluentui/react-icons";
 import React, { useEffect, useState } from "react";
-import { Table } from "./table";
 import { Results } from "./results";
 import ResultsSkeleton from "./skeletons/resultsSkeleton";
 
