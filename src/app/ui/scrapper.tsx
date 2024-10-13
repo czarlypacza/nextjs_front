@@ -32,6 +32,16 @@ export const Scrapper = (props: singleProps) => {
   const [positive, setPositive] = React.useState(0);
   const [negative, setNegative] = React.useState(0);
 
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    fetch("http://192.168.0.140:5000/companies")
+      .then((res) => res.json())
+      .then((data) => {
+        setCompanies(data);
+      });
+  }, []);
+
   const onChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
     props.setValue(data.value.toString());
   };
@@ -88,6 +98,26 @@ export const Scrapper = (props: singleProps) => {
 
   return (
     <div className="flex flex-col gap-8 mt-2 ">
+
+      <Card className="ml-20 mr-40 max-h-32 overflow-y-scroll">
+        
+        <div className="ml-20 mr-40 max-h-32 overflow-y-scroll ">
+        {companies.map((company: any) => (
+          <div className="flex gap-4" >
+            <Text size={500} weight="semibold">
+              {company[0]}
+            </Text>
+            <Text size={500} weight="semibold">
+              {company[1]}
+            </Text>
+          </div>
+        ))}
+
+      </div>
+  
+      </Card>
+
+
       <Card className="ml-20 mr-40">
         <CardHeader
           header={
@@ -108,6 +138,7 @@ export const Scrapper = (props: singleProps) => {
             icon={<BeakerSettingsFilled fontSize={16} />}
             onClick={analyze}
             appearance="primary"
+            disabled={loading}
           >
             Analyze
           </Button>
@@ -117,14 +148,15 @@ export const Scrapper = (props: singleProps) => {
         </CardFooter>
       </Card>
 
-      {(props.result.length === 0 && loading == false)? (
+
+      {(props.result.length === 0 && loading == false) ? (
         <Card className="w-28 m-auto">
           <Body1Stronger>No results</Body1Stronger>
         </Card>
       ) : (
-        loading == true ? (  
-          <ResultsSkeleton  />
-        ):(
+        loading == true ? (
+          <ResultsSkeleton />
+        ) : (
           <Results positive={positive} negative={negative} result={props.result} />
         )
       )}

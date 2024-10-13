@@ -154,6 +154,7 @@ export const Single = (props: singleProps) => {
             icon={<BeakerSettingsFilled fontSize={16} />}
             onClick={analyze}
             appearance="primary"
+            disabled={loading}
           >
             Analyze
           </Button>
