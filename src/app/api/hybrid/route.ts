@@ -40,8 +40,9 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const sentimentData = await fetch(`http://192.168.0.140:5000/sentiment/${company}`).then((res) => res.json());
+        const sentimentData = await fetch(`http://192.168.0.140:5001/sentiment/${company}`).then((res) => res.json());
 
+        console.log(sentimentData);
         const convertedData = convertData(JSON.stringify(sentimentData));
 
         return NextResponse.json(convertedData);
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     console.log(body);
     try {
-        const sentimentData = await fetch('http://192.168.0.140:5000/sentiment', {
+        const sentimentData = await fetch('http://192.168.0.140:5001/sentiment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

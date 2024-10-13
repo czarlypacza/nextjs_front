@@ -49,7 +49,11 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                 positive = [];
                 negative = [];
 
+                
+
                 sentencences.forEach(sentence => {
+                    if(sentence.trim() == "") return;
+
                     let parts = [sentence];
                     contrastiveConjunctions.forEach(conjunction => {
                         if (sentence.includes(` ${conjunction} `)) {
