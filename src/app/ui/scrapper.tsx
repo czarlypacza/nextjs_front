@@ -103,7 +103,7 @@ export const Scrapper = (props: singleProps) => {
         
         <div className="ml-20 mr-40 max-h-32 overflow-y-scroll ">
         {companies.map((company: any) => (
-          <div className="flex gap-4" >
+          <div className="flex gap-4" key={company.id} >
             <Text size={500} weight="semibold">
               {company[0]}
             </Text>
