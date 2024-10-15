@@ -3,7 +3,7 @@
 import { Switch, SwitchOnChangeData } from "@fluentui/react-components";
 import React from "react";
 import { Single } from "./single";
-import { Scrapper } from "./scrapper";
+import ScrapperPage from "./scrapperPage";
 
 type analyzerProps = {
   type: "rule" | "ml" | "hybrid";
@@ -45,7 +45,7 @@ export const Analyzer = (props: analyzerProps) => {
           setValue={setValueSingle}
         />
       ) : (
-        <Scrapper
+        <ScrapperPage
           result={resultScrapper}
           setResult={setResultScrapper}
           type={props.type}

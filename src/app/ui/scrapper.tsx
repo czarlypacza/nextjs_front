@@ -12,9 +12,11 @@ import {
   BeakerSettingsFilled,
   DeleteDismissFilled,
 } from "@fluentui/react-icons";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Results } from "./results";
 import ResultsSkeleton from "./skeletons/resultsSkeleton";
+import Companies from "./companies";
+import CompaniesSkeleton from "./skeletons/companiesSkeleton";
 
 type singleProps = {
   type: "rule" | "ml" | "hybrid";
@@ -32,18 +34,10 @@ export const Scrapper = (props: singleProps) => {
   const [positive, setPositive] = React.useState(0);
   const [negative, setNegative] = React.useState(0);
 
-  const [companies, setCompanies] = useState([]);
-
-  useEffect(() => {
-    fetch("http://192.168.0.140:5000/companies")
-      .then((res) => res.json())
-      .then((data) => {
-        setCompanies(data);
-      });
-  }, []);
+  const [value, setValue] = React.useState("");
 
   const onChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
-    props.setValue(data.value.toString());
+    setValue(data.value.toString());
   };
 
   useEffect(() => {
@@ -61,7 +55,7 @@ export const Scrapper = (props: singleProps) => {
 
   async function rule_click() {
     setLoading(true);
-    const response = await fetch(`/api/rule?company=${props.value}`);
+    const response = await fetch(`/api/rule?company=${value}`);
     const data = await response.json();
 
     props.setResult(data.results);
@@ -70,7 +64,7 @@ export const Scrapper = (props: singleProps) => {
 
   async function hybrid_click() {
     setLoading(true);
-    const response = await fetch(`/api/hybrid?company=${props.value}`);
+    const response = await fetch(`/api/hybrid?company=${value}`);
     const data = await response.json();
 
     props.setResult(data.results);
@@ -78,7 +72,7 @@ export const Scrapper = (props: singleProps) => {
   }
 
   const analyze = () => {
-    if (!props.value) {
+    if (!value) {
       return;
     }
     if (props.type === "rule") {
@@ -90,76 +84,59 @@ export const Scrapper = (props: singleProps) => {
   };
 
   const clear = () => {
-    props.setValue("");
+    setValue("");
     props.setResult([]);
     setPositive(0);
     setNegative(0);
   };
 
   return (
-    <div className="flex flex-col gap-8 mt-2 ">
+    
 
-      <Card className="ml-20 mr-40 max-h-32 overflow-y-scroll">
-        
-        <div className="ml-20 mr-40 max-h-32 overflow-y-scroll ">
-        {companies.map((company: any) => (
-          <div className="flex gap-4" key={company.id} >
-            <Text size={500} weight="semibold">
-              {company[0]}
-            </Text>
-            <Text size={500} weight="semibold">
-              {company[1]}
-            </Text>
-          </div>
-        ))}
-
-      </div>
-  
-      </Card>
+      
 
 
-      <Card className="ml-20 mr-40">
-        <CardHeader
-          header={
-            <Text size={500} weight="semibold">
-              Input name of company you want to analyze. woodcore
-            </Text>
-          }
-        />
-        <Input
-          value={props.value}
-          onChange={onChange}
-          size="large"
-          placeholder="Type here ..."
-          className=""
-        />
-        <CardFooter>
-          <Button
-            icon={<BeakerSettingsFilled fontSize={16} />}
-            onClick={analyze}
-            appearance="primary"
-            disabled={loading}
-          >
-            Analyze
-          </Button>
-          <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
-            Clear
-          </Button>
-        </CardFooter>
-      </Card>
-
-
-      {(props.result.length === 0 && loading == false) ? (
-        <Card className="w-28 m-auto">
-          <Body1Stronger>No results</Body1Stronger>
+      <div className="flex flex-col gap-8">
+        <Card className="ml-20 mr-40">
+          <CardHeader
+            header={
+              <Text size={500} weight="semibold">
+                Input name of company you want to analyze. woodcore
+              </Text>
+            }
+          />
+          <Input
+            value={value}
+            onChange={onChange}
+            size="large"
+            placeholder="Type here ..."
+            className=""
+          />
+          <CardFooter>
+            <Button
+              icon={<BeakerSettingsFilled fontSize={16} />}
+              onClick={analyze}
+              appearance="primary"
+              disabled={loading}
+            >
+              Analyze
+            </Button>
+            <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
+              Clear
+            </Button>
+          </CardFooter>
         </Card>
-      ) : (
-        loading == true ? (
-          <ResultsSkeleton />
+        {(props.result.length === 0 && loading == false) ? (
+          <Card className="w-28 m-auto">
+            <Body1Stronger>No results</Body1Stronger>
+          </Card>
         ) : (
-          <Results positive={positive} negative={negative} result={props.result} />
-        )
-      )}
-    </div>
+          loading == true ? (
+            <ResultsSkeleton />
+          ) : (
+            <Results positive={positive} negative={negative} result={props.result} />
+          )
+        )}
+      </div>
   );
 };
