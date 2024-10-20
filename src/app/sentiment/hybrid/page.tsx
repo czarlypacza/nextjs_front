@@ -8,12 +8,19 @@ const breadcrumbs = [
   { text: "Hybrid approach", href: "/sentiment/hybrid", icon: <HybridFilled /> },
 ];
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+})  {
 
     return (
       <main>
         <Breadcrumbs breadcrumbs={breadcrumbs}></Breadcrumbs>
-        <Analyzer type="hybrid"/>
+        <Analyzer type="hybrid" searchParams={searchParams}/>
       </main>
     );
   }

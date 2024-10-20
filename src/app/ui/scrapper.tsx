@@ -15,8 +15,7 @@ import {
 import React, { Suspense, useEffect, useState } from "react";
 import { Results } from "./results";
 import ResultsSkeleton from "./skeletons/resultsSkeleton";
-import Companies from "./companies";
-import CompaniesSkeleton from "./skeletons/companiesSkeleton";
+
 
 type singleProps = {
   type: "rule" | "ml" | "hybrid";
@@ -34,7 +33,7 @@ export const Scrapper = (props: singleProps) => {
   const [positive, setPositive] = React.useState(0);
   const [negative, setNegative] = React.useState(0);
 
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(props.value);
 
   const onChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
     setValue(data.value.toString());
@@ -76,67 +75,74 @@ export const Scrapper = (props: singleProps) => {
       return;
     }
     if (props.type === "rule") {
-      rule_click().then(() => setLoading(false));
+      rule_click().then(() => {
+        setLoading(false);
+        props.setValue(value);  
+      });
     } else if (props.type === "ml") {
     } else {
-      hybrid_click().then(() => setLoading(false));;
+      hybrid_click().then(() => {
+        setLoading(false);
+        props.setValue(value);
+      });;
     }
   };
 
   const clear = () => {
     setValue("");
+    props.setValue("");
     props.setResult([]);
     setPositive(0);
     setNegative(0);
   };
 
   return (
-    
-
-      
 
 
-      <div className="flex flex-col gap-8">
-        <Card className="ml-20 mr-40">
-          <CardHeader
-            header={
-              <Text size={500} weight="semibold">
-                Input name of company you want to analyze. woodcore
-              </Text>
-            }
-          />
-          <Input
-            value={value}
-            onChange={onChange}
-            size="large"
-            placeholder="Type here ..."
-            className=""
-          />
-          <CardFooter>
-            <Button
-              icon={<BeakerSettingsFilled fontSize={16} />}
-              onClick={analyze}
-              appearance="primary"
-              disabled={loading}
-            >
-              Analyze
-            </Button>
-            <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
-              Clear
-            </Button>
-          </CardFooter>
+
+
+
+    <div className="flex flex-col gap-8">
+      <Card className="ml-20 mr-40">
+        <CardHeader
+          header={
+            <Text size={500} weight="semibold">
+              Input name of company you want to analyze. woodcore
+            </Text>
+          }
+        />
+        <Input
+          value={value}
+          onChange={onChange}
+          size="large"
+          placeholder="Type here ..."
+          className=""
+        />
+        <CardFooter>
+          <Button
+            icon={<BeakerSettingsFilled fontSize={16} />}
+            onClick={analyze}
+            appearance="primary"
+            disabled={loading}
+          >
+            Analyze
+          </Button>
+          <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
+            Clear
+          </Button>
+        </CardFooter>
+      </Card>
+      {(props.result.length === 0 && loading == false) ? (
+        <Card className="w-28 m-auto">
+          <Body1Stronger>No results</Body1Stronger>
         </Card>
-        {(props.result.length === 0 && loading == false) ? (
-          <Card className="w-28 m-auto">
-            <Body1Stronger>No results</Body1Stronger>
-          </Card>
+      ) : (
+        loading == true ? (
+          <ResultsSkeleton />
         ) : (
-          loading == true ? (
-            <ResultsSkeleton />
-          ) : (
-            <Results positive={positive} negative={negative} result={props.result} />
-          )
-        )}
-      </div>
+          <Results positive={positive} negative={negative} result={props.result} />
+        )
+      )}
+    </div>
   );
 };

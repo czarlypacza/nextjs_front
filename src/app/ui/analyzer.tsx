@@ -7,6 +7,10 @@ import ScrapperPage from "./scrapperPage";
 
 type analyzerProps = {
   type: "rule" | "ml" | "hybrid";
+  searchParams? : {
+    query?: string;
+    page?: string;
+  };
 };
 
 export const Analyzer = (props: analyzerProps) => {
@@ -51,6 +55,7 @@ export const Analyzer = (props: analyzerProps) => {
           type={props.type}
           value={valueScrapper}
           setValue={setValueScrapper}
+          searchParams={props.searchParams}
         />
       )}
 

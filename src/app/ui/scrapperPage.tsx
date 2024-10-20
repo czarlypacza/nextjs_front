@@ -9,6 +9,10 @@ type singleProps = {
     setResult: (result: any) => void;
     value: string;
     setValue: (value: string) => void;
+    searchParams?: {
+        query?: string;
+        page?: string;
+      };
 };
 
 export default function ScrapperPage(props: singleProps) {
@@ -16,13 +20,17 @@ export default function ScrapperPage(props: singleProps) {
 
     return (
         <div className="flex flex-row mt-2 ">
-            <div className="flex flex-col gap-8">
+             <div className="flex flex-col gap-8">
                 <Suspense fallback={<CompaniesSkeleton />}>
-                    <Companies />
+                    <Companies searchParams={props.searchParams}/>
                 </Suspense>
             </div>
 
-            <Scrapper type={props.type} result={props.result} setResult={props.setResult} value={props.value} setValue={props.setValue} />
+            <Scrapper type={props.type}
+                result={props.result}
+                setResult={props.setResult}
+                value={props.value}
+                setValue={props.setValue} />
 
         </div>
     );
