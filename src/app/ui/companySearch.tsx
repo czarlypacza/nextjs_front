@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
-import { Card, Field, SearchBoxChangeEvent, Text } from "@fluentui/react-components";
-import { fetchCompanies } from '@/app/api/companies/route';
+import { Field, SearchBoxChangeEvent } from "@fluentui/react-components";
 import { SearchBox } from '@fluentui/react-components';
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 

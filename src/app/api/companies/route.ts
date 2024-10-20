@@ -25,11 +25,3 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
-
-export const fetchCompanies = async () => {
-    const response = await fetch('/api/companies');
-    if (!response.ok) {
-        throw new Error('Failed to fetch companies');
-    }
-    return await response.json();
-};

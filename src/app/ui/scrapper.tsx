@@ -12,7 +12,7 @@ import {
   BeakerSettingsFilled,
   DeleteDismissFilled,
 } from "@fluentui/react-icons";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Results } from "./results";
 import ResultsSkeleton from "./skeletons/resultsSkeleton";
 

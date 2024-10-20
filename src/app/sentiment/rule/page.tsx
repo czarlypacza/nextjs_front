@@ -1,9 +1,6 @@
 import { Analyzer } from "@/app/ui/analyzer";
 import { Breadcrumbs } from "@/app/ui/breadcrumb";
-import Companies from "@/app/ui/companies";
-import CompaniesSkeleton from "@/app/ui/skeletons/companiesSkeleton";
 import { BookLetter20Filled } from "@fluentui/react-icons";
-import { Suspense } from "react";
 
 const breadcrumbs = [
   { text: "Sentiment Analysis", href: "/sentiment" },
