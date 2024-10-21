@@ -14,8 +14,24 @@ datasource db {
 }
 
 model Company {
-  id    Int     @id @default(autoincrement())
-  name String  @unique
-  url  String
-  review_count Int
+  id            Int              @id @default(autoincrement())
+  name          String           @unique
+  url           String?
+  review_count  Int
+  categories    CompanyCategory[]
+}
+
+model Category {
+  id            Int              @id @default(autoincrement())
+  name          String           @unique
+  companies     CompanyCategory[]
+}
+
+model CompanyCategory {
+  company_id    Int
+  category_id   Int
+  company       Company          @relation(fields: [company_id], references: [id])
+  category      Category         @relation(fields: [category_id], references: [id])
+
+  @@id([company_id, category_id])
 }

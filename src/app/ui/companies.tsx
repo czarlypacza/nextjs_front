@@ -3,6 +3,7 @@ import * as React from "react";
 import { Card } from "@fluentui/react-components";
 import CompanySearch from "./companySearch";
 import { Company } from "@prisma/client";
+import { CompanyTags } from "./companyTags";
 
 
 export default async function Companies({
@@ -10,12 +11,14 @@ export default async function Companies({
   }: {
     searchParams?: {
       query?: string;
+      tags?: string;
     };
   }) {
     const query = searchParams?.query || '';
+    const tags = searchParams?.tags || '';
     //const [companies, setCompanies] = React.useState<any[]>([]);
 
-    const data = await fetch(`/api/companies?query=${query}`).then((res) => res.json());
+    const data = await fetch(`/api/companies?query=${query}&tags=${tags}`).then((res) => res.json());
 
     // const searchParams = useSearchParams();
     //const pathname = usePathname();
@@ -44,6 +47,8 @@ export default async function Companies({
                 </Field> */}
 
                 <CompanySearch />
+                <CompanyTags />
+                
                 {data.map((company: Company) => (
                     <div className="flex gap-4" key={company.id}>
                         <h2>

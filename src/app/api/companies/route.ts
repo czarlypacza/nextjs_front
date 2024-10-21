@@ -6,17 +6,39 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('query') || '';
     console.log('query', query);
 
+    let categories = searchParams.get('tags')?.split(',') || [];
+    categories = categories.map((category) => category.trim().toLowerCase().split(' ').join('_'));
+    console.log('categories', categories);
+
     try {
         const data = await prisma.company.findMany({
             where: {
                 name: {
                     contains: query,
                 },
+                categories: {
+                    some: {
+                        category: {
+                            name: {
+                                in: categories,
+                            },
+                        },
+                    },
+                },
             },
             select: {
                 id: true,
                 name: true,
                 review_count: true,
+                categories: {
+                    select: {
+                        category: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
             },
         });
         return NextResponse.json(data);

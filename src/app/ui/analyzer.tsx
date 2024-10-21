@@ -9,7 +9,7 @@ type analyzerProps = {
   type: "rule" | "ml" | "hybrid";
   searchParams? : {
     query?: string;
-    page?: string;
+    tags?: string;
   };
 };
 

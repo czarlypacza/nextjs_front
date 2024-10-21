@@ -26,7 +26,7 @@ export default function CompanySearch() {
   return (
 
     <Field
-      label="Controlled SearchBox limiting the value to 20 characters"
+      label="Name of company"
     // validationState={valid ? "none" : "warning"}
     // validationMessage={valid ? "" : "Input is limited to 20 characters."}
     >

@@ -13,7 +13,7 @@ export default async function Page({
 }: {
   searchParams?: {
     query?: string;
-    page?: string;
+    tags?: string;
   };
 })  {
 

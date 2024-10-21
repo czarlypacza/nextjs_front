@@ -12,7 +12,7 @@ type singleProps = {
     setValue: (value: string) => void;
     searchParams?: {
         query?: string;
-        page?: string;
+        tags?: string;
       };
 };
 
