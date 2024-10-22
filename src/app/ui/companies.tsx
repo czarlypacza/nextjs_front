@@ -36,8 +36,8 @@ export default async function Companies({
     // }
 
     return (
-        <Card className="ml-20 mr-20 overflow-y-scroll">
-            <div className="max-h-96 overflow-y-scroll">
+        <Card className="ml-20 mr-20 overflow-y-scroll h-full">
+            <div className="overflow-y-scroll h-full" style={{ scrollbarWidth: "thin", scrollbarColor: "#AAAAAA transparent" }}>
                 {/* <Field
                     label="Controlled SearchBox limiting the value to 20 characters"
                     // validationState={valid ? "none" : "warning"}

@@ -31,6 +31,7 @@ export default function CompanySearch() {
     // validationMessage={valid ? "" : "Input is limited to 20 characters."}
     >
       <SearchBox onChange={handleSearch} defaultValue={searchParams.get('query')?.toString()}
+      
       />
     </Field>
 

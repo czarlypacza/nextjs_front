@@ -21,7 +21,7 @@ export default function ScrapperPage(props: singleProps) {
 
     return (
         <div className="flex flex-row mt-2 ">
-             <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-8 grow " style={{height: "50vh"}} >
                 <Suspense fallback={<CompaniesSkeleton />}>
                     <Companies searchParams={props.searchParams}/>
                 </Suspense>

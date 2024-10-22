@@ -133,7 +133,7 @@ export const Scrapper = (props: singleProps) => {
         </CardFooter>
       </Card>
       {(props.result.length === 0 && loading == false) ? (
-        <Card className="w-28 m-auto">
+        <Card className="w-28 m-auto mt-0 mb-0">
           <Body1Stronger>No results</Body1Stronger>
         </Card>
       ) : (
