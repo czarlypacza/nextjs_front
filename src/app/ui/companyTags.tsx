@@ -89,7 +89,7 @@ export const CompanyTags = () => {
   });
 
   return (
-    <Field label="Categories" style={{ maxWidth: 400 }}>
+    <Field label="Categories" >
       <TagPicker
         
         onOptionSelect={onOptionSelect}
@@ -97,7 +97,7 @@ export const CompanyTags = () => {
         inline={true}
       >
         <TagPickerControl>
-          <TagPickerGroup aria-label="Selected Employees">
+          <TagPickerGroup aria-label="Selected Employees" >
             {selectedOptions.map((option, index) => (
               <Tag
                 key={index}
@@ -116,7 +116,7 @@ export const CompanyTags = () => {
           />
         </TagPickerControl>
 
-        <TagPickerList>
+        <TagPickerList style={{zIndex:"11",position:"absolute"}} >
           {children}
         </TagPickerList>
 

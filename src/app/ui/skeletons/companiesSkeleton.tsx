@@ -6,7 +6,7 @@ const shimmer =
 
 const CompaniesSkeleton = () => {
     return (
-        <div className='ml-20 mr-20 mt-4 flex flex-col items-center'>
+        <div className='mt-4 flex flex-col items-center'>
             <div className={`${shimmer} relative w-fit overflow-hidden md:col-span-4 mb-4 flex justify-center gap-4`}>
                 <div className="h-16 w-36 rounded-md bg-zinc-800">
                     <div className="h-5 w-12 bg-opacity-55 bg-zinc-400 m-2 rounded-md ml-auto mr-auto" />

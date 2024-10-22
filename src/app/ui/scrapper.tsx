@@ -103,7 +103,7 @@ export const Scrapper = (props: singleProps) => {
 
 
     <div className="flex flex-col gap-8">
-      <Card className="ml-20 mr-40">
+      <Card className="mr-10">
         <CardHeader
           header={
             <Text size={500} weight="semibold">
