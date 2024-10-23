@@ -7,6 +7,7 @@ import {
   Input,
   Text,
   Body1Stronger,
+  Field,
 } from "@fluentui/react-components";
 import {
   BeakerSettingsFilled,
@@ -35,9 +36,15 @@ export const Scrapper = (props: singleProps) => {
 
   const [value, setValue] = React.useState(props.value);
 
+  const [number, setNumber] = React.useState("500");
+
   const onChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
     setValue(data.value.toString());
   };
+
+  const onNumberChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
+    setNumber(data.value.toString());
+  }
 
   useEffect(() => {
     let pos = 0;
@@ -54,8 +61,9 @@ export const Scrapper = (props: singleProps) => {
 
   async function rule_click() {
     setLoading(true);
-    const response = await fetch(`/api/rule?company=${value}`);
+    const response = await fetch(`/api/rule?company=${value}&limit=${number}`);
     const data = await response.json();
+    console.log(data);
 
     props.setResult(data.results);
     return data;
@@ -63,7 +71,7 @@ export const Scrapper = (props: singleProps) => {
 
   async function hybrid_click() {
     setLoading(true);
-    const response = await fetch(`/api/hybrid?company=${value}`);
+    const response = await fetch(`/api/hybrid?company=${value}&limit=${number}`);
     const data = await response.json();
 
     props.setResult(data.results);
@@ -77,7 +85,7 @@ export const Scrapper = (props: singleProps) => {
     if (props.type === "rule") {
       rule_click().then(() => {
         setLoading(false);
-        props.setValue(value);  
+        props.setValue(value);
       });
     } else if (props.type === "ml") {
     } else {
@@ -118,6 +126,15 @@ export const Scrapper = (props: singleProps) => {
           placeholder="Type here ..."
           className=""
         />
+        <Field className="max-w-60" label="Max number of reviews">
+          <Input
+            value={number}
+            onChange={onNumberChange}
+            size="medium"
+            placeholder="No limit"
+            className=""
+          />
+        </Field>
         <CardFooter>
           <Button
             icon={<BeakerSettingsFilled fontSize={16} />}

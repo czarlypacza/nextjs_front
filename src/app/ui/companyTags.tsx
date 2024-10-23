@@ -21,7 +21,7 @@ const options = [
   "Travel insurance company",
   "Furniture store",
   "Clothing store",
-  "Fitness and nutrition store",
+  "Fitness and nutrition service",
   "Insurance agency",
   "Mortgage broker",
   "Real estate agents",

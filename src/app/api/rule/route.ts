@@ -285,8 +285,8 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
 //     };
 //   };
 
-const fetchReviews = async (company: string) => {
-    const response = await fetch(`http://192.168.0.140:5000/reviews/${company}`);
+const fetchReviews = async (company: string, limit:string|null) => {
+    const response = await fetch(`http://192.168.0.140:5000/reviews/${company}?limit=${limit}`);
     const data = await response.json();
     return data;
 };
@@ -306,12 +306,14 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const company = searchParams.get('company');
 
+    const limit = searchParams.get('limit');
+
     if (!company) {
         return NextResponse.json({ error: 'Company name is required' }, { status: 400 });
     }
 
     try {
-        const reviews = await fetchReviews(company);
+        const reviews = await fetchReviews(company, limit);
         const sentimentData = await analyzeSentiment(reviews[company]?.map((review: { text: any; }) => ({ text: review.text })));
         return NextResponse.json(sentimentData);
     } catch (error) {
