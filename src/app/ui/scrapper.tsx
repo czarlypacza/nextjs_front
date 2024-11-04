@@ -78,6 +78,16 @@ export const Scrapper = (props: singleProps) => {
     return data;
   }
 
+  async function ml_click() {
+    setLoading(true);
+    const response = await fetch(`/api/machine?company=${value}&limit=${number}`);
+    const data = await response.json();
+    console.log(data);
+
+    props.setResult(data.results);
+    return data;
+  }
+
   const analyze = () => {
     if (!value) {
       return;
@@ -88,6 +98,10 @@ export const Scrapper = (props: singleProps) => {
         props.setValue(value);
       });
     } else if (props.type === "ml") {
+      ml_click().then(() => {
+        setLoading(false);
+        props.setValue(value);
+      });
     } else {
       hybrid_click().then(() => {
         setLoading(false);

@@ -103,6 +103,25 @@ export const Single = (props: singleProps) => {
     return data.results;
   };
 
+  const sentimentMachine = async (text: string) => {
+    setLoading(true);
+    const response = await fetch("/api/machine", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: text }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    return data.results;
+  }
+
+
   const analyze = () => {
     if (!props.value) {
       return;
@@ -115,6 +134,10 @@ export const Single = (props: singleProps) => {
         }
       );
     } else if (props.type === "ml") {
+      sentimentMachine(props.value).then((data) => {
+        props.setResult(data);
+        setLoading(false);
+      });
     } else {
       sentimentHybrid(props.value).then((data) => {
         props.setResult(data);

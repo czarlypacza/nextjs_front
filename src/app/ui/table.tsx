@@ -50,7 +50,7 @@ const columns: TableColumnDefinition<Item>[] = [
       return "Positive";
     },
     renderCell: (item) => {
-      return <TableCellLayout>{item.pos.toString()}</TableCellLayout>;
+      return <TableCellLayout>{item.pos.toFixed(2).toString()}</TableCellLayout>;
     },
   }),
   createTableColumn<Item>({
@@ -63,7 +63,7 @@ const columns: TableColumnDefinition<Item>[] = [
     },
 
     renderCell: (item) => {
-      return <TableCellLayout>{item.neg.toString()}</TableCellLayout>;
+      return <TableCellLayout>{item.neg.toFixed(2).toString()}</TableCellLayout>;
     },
   }),
   createTableColumn<Item>({
