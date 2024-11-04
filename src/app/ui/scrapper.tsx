@@ -8,6 +8,8 @@ import {
   Text,
   Body1Stronger,
   Field,
+  Switch,
+  SwitchOnChangeData,
 } from "@fluentui/react-components";
 import {
   BeakerSettingsFilled,
@@ -37,6 +39,17 @@ export const Scrapper = (props: singleProps) => {
   const [value, setValue] = React.useState(props.value);
 
   const [number, setNumber] = React.useState("500");
+
+  const [label, setLabel] = React.useState("SImple mode");
+  const [advanced, setAdvanced] = React.useState(false);
+
+  const onChangeSwitch = (
+    ev: React.ChangeEvent<HTMLInputElement>,
+    data: SwitchOnChangeData
+  ) => {
+    setAdvanced(data.checked);
+    setLabel(data.checked ? "Advanced mode" : "Simple mode");
+  };
 
   const onChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
     setValue(data.value.toString());
@@ -124,7 +137,7 @@ export const Scrapper = (props: singleProps) => {
 
 
 
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-4">
       <Card className="mr-10">
         <CardHeader
           header={
@@ -161,6 +174,12 @@ export const Scrapper = (props: singleProps) => {
           <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
             Clear
           </Button>
+          <Switch
+            label={label}
+            labelPosition="after"
+            checked={advanced}
+            onChange={onChangeSwitch}
+          />
         </CardFooter>
       </Card>
       {(props.result.length === 0 && loading == false) ? (
@@ -171,7 +190,7 @@ export const Scrapper = (props: singleProps) => {
         loading == true ? (
           <ResultsSkeleton />
         ) : (
-          <Results positive={positive} negative={negative} result={props.result} />
+          <Results positive={positive} negative={negative} result={props.result} advanced={advanced} />
         )
       )}
     </div>

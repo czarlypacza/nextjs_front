@@ -19,6 +19,7 @@ import {
   SelectProps,
   tokens,
   makeStyles,
+  TableColumnSizingOptions,
 } from "@fluentui/react-components";
 
 type Item = {
@@ -75,10 +76,32 @@ const columns: TableColumnDefinition<Item>[] = [
       return "Sentiment";
     },
     renderCell: (item) => {
-      return <TableCellLayout>{item.sentiment}</TableCellLayout>;
+      return <TableCellLayout >{item.sentiment}</TableCellLayout>;
     },
   }),
 ];
+
+const columnSizes:TableColumnSizingOptions = {
+  sentence: {
+    minWidth:600,
+    idealWidth: 800,
+    autoFitColumns: true,
+  },
+  positive: {
+    minWidth:80,
+    defaultWidth: 60,
+  },
+  negative: {
+    minWidth:80,
+    defaultWidth: 60,
+  },
+  sentiment: {
+    minWidth:40,
+    defaultWidth: 40,
+    idealWidth: 40,
+    autoFitColumns: true,
+  },
+};
 
 const useStyles = makeStyles({
   table: {
@@ -98,6 +121,7 @@ const useStyles = makeStyles({
 
 type TableProps = {
   items: Item[];
+  advanced: boolean;
 };
 
 export const Table = (props: TableProps) => {
@@ -147,11 +171,13 @@ const onSelectItemsPerPageChange: SelectProps["onChange"] = (event, data) => {
     <>
       <DataGrid
         items={currentItems}
-        columns={columns}
+        columns={props.advanced ? columns : columns.slice(0, 1).concat(columns.slice(3))} 
         sortable
         getRowId={(item) => item.sentence}
         focusMode="composite"
         className={styles.table}
+        resizableColumns
+        columnSizingOptions={columnSizes}
       >
         <DataGridHeader>
           <DataGridRow appearance="neutral" className={styles.color}>
@@ -170,6 +196,8 @@ const onSelectItemsPerPageChange: SelectProps["onChange"] = (event, data) => {
           )}
         </DataGridBody>
       </DataGrid>
+
+      
       <div className="flex justify-center gap-2 mt-5">
         <Button
           onClick={() => onPageChange(currentPage - 1)}
