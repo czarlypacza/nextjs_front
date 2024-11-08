@@ -9,6 +9,8 @@ import {
 
   Text,
   Body1Stronger,
+  SwitchOnChangeData,
+  Switch,
 } from "@fluentui/react-components";
 import {
   BeakerSettingsFilled,
@@ -153,6 +155,18 @@ export const Single = (props: singleProps) => {
     setNegative(0);
   };
 
+  const [label, setLabel] = React.useState("SImple mode");
+  const [advanced, setAdvanced] = React.useState(false);
+
+  const onChangeSwitch = (
+    ev: React.ChangeEvent<HTMLInputElement>,
+    data: SwitchOnChangeData
+  ) => {
+    setAdvanced(data.checked);
+    setLabel(data.checked ? "Advanced mode" : "Simple mode");
+  };
+
+
   return (
     <div className="flex flex-col gap-8 mt-2">
       <Card>
@@ -184,6 +198,12 @@ export const Single = (props: singleProps) => {
           <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
             Clear
           </Button>
+          <Switch
+            label={label}
+            labelPosition="after"
+            checked={advanced}
+            onChange={onChangeSwitch}
+          />
         </CardFooter>
       </Card>
 
@@ -196,7 +216,7 @@ export const Single = (props: singleProps) => {
         loading == true ? (  
           <ResultsSkeleton  />
         ):(
-          <Results positive={positive} negative={negative} result={props.result} />
+          <Results positive={positive} negative={negative} result={props.result} advanced={advanced}/>
         )
         
       )}

@@ -3,8 +3,6 @@ import {
     Card,
     Body1,
     Body1Strong,
-    Body1Stronger,
-    Body2,
     Text,
   } from "@fluentui/react-components";
   import React from "react";
