@@ -56,6 +56,11 @@ export const Scrapper = (props: singleProps) => {
   };
 
   const onNumberChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
+    const maxReviews = process.env.NEXT_PUBLIC_MAX_REVIEWS!;
+    console.log(maxReviews);
+    if (parseInt(data.value.toString()) > parseInt(maxReviews)) {
+      data.value = maxReviews;
+    }
     setNumber(data.value.toString());
   }
 

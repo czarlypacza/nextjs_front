@@ -6,20 +6,17 @@ const shimmer =
 
 const CompaniesSkeleton = () => {
     return (
-        <div className='mt-4 flex flex-col items-center'>
-            <div className={`${shimmer} relative w-fit overflow-hidden md:col-span-4 mb-4 flex justify-center gap-4`}>
-                <div className="h-16 w-36 rounded-md bg-zinc-800">
-                    <div className="h-5 w-12 bg-opacity-55 bg-zinc-400 m-2 rounded-md ml-auto mr-auto" />
-                    <div className="h-5 w-24 bg-opacity-55 bg-zinc-400 m-2 mt-0 rounded-md ml-auto mr-auto" />
+        <div className=' flex flex-col items-center h-full w-full max-w-md'>
+            <div className={`${shimmer} relative w-full overflow-hidden h-full  flex justify-center gap-4`}>
+                <div className="h-full w-full rounded-md bg-zinc-800 ">
+                    <div className="h-4 mt-6 ml-5 mr-20 bg-opacity-55 bg-zinc-400 m-2 rounded-md " />
+
+                    <div className="h-8  ml-5 mr-5 bg-opacity-55 bg-zinc-400 m-2 rounded-md " />
+                    <div className="h-4  mt-5 ml-5 mr-20 bg-opacity-55 bg-zinc-400 m-2 rounded-md " />
+
+                    <div className="h-8  ml-5 mr-5 bg-opacity-55 bg-zinc-400 m-2 rounded-md " />
                 </div>
-                <div className="h-16 w-40 rounded-md bg-zinc-800">
-                    <div className="h-5 w-12 bg-opacity-55 bg-zinc-400 m-2 rounded-md ml-auto mr-auto" />
-                    <div className="h-5 w-24 bg-opacity-55 bg-zinc-400 m-2 mt-0 rounded-md ml-auto mr-auto" />
-                </div>
-                <div className="h-16 w-24 rounded-md bg-zinc-800">
-                    <div className="h-5 w-20 bg-opacity-55 bg-zinc-400 m-2 rounded-md ml-auto mr-auto" />
-                    <div className="h-5 w-16 bg-opacity-55 bg-zinc-400 m-2 mt-0 rounded-md ml-auto mr-auto" />
-                </div>
+
             </div>
         </div>
     );
