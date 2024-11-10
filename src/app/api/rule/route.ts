@@ -38,10 +38,10 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
 
     return new Promise((resolve, reject) => {
         try {
-            console.log(newdocuments2);
+            //console.log(newdocuments2);
 
             const document = newdocuments2.map(document => document.text.split("."));
-            console.log(document);
+            //console.log(document);
             const Scores: string | { pos: number; neg: number; }[] = [];
 
             document.forEach(sentencences => {
@@ -69,16 +69,16 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                         const weight = index === 1 ? 2 : 1;
 
                         //dla kazdego zdania
-                        console.log(part);
+                        //console.log(part);
                         const tokens = part.split(" ");
                         //rozdzielenie na tokeny
-                        console.log(tokens);
+                        //console.log(tokens);
                         const tagger = posTagger();
                         const taggedTokens = tagger.tagSentence(part);
-                        console.log(taggedTokens);
+                        //console.log(taggedTokens);
                         //tagowanie tokenow
                         let lemmas: string[] = taggedTokens.map((token: { lemma: string; normal: string; }) => token.lemma ? token.lemma : token.normal);
-                        console.log("lemmas: " + lemmas)
+                        //console.log("lemmas: " + lemmas)
                         //lematyzacja tokenow
 
                         lemmas = lemmas.filter((lemma: string) => !stopwords.includes(lemma));
@@ -106,7 +106,7 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
 
                             if ((lemma === "not" || lemma === "no" || lemma === "never" || lemma === "without") && !negation && lemmas[index + 1]) {
                                 negation_index = index + 1;
-                                console.log("############ negation: " + negation_index);
+                                //console.log("############ negation: " + negation_index);
                             }
 
                             let modifier = 1;  // Default modifier is 1 (i.e., no change)
@@ -116,7 +116,7 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
 
                             if (negation_index === index) {
                                 negation = true;
-                                console.log("negation: " + negation);
+                                //console.log("negation: " + negation);
                             } else {
                                 negation = false;
                             }
@@ -144,9 +144,9 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                                         //jezeli znaleziono słowo to dadaj jego wynik do tablicy i zwieksz licznik
                                     }
                                 }
-                                console.log("afinn165 score: " + score);
+                                //console.log("afinn165 score: " + score);
                             } else {
-                                console.log("not in afinn165: " + lemma);
+                                //console.log("not in afinn165: " + lemma);
                             }
 
                             const vader = require('vader-sentiment');
@@ -157,7 +157,7 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                                     if (negation) {
                                         negative_array.push(score * -1);
                                         if (negative.find((element: any) => element === lemma)) {
-                                            console.log("negative already in array: " + lemma);
+                                            //console.log("negative already in array: " + lemma);
                                         } else {
                                             negative.push(lemma);
                                         }
@@ -165,7 +165,7 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                                     } else {
                                         positive_array.push(score);
                                         if (positive.find((element: any) => element === lemma)) {
-                                            console.log("positive already in array: " + lemma);
+                                            //console.log("positive already in array: " + lemma);
                                         } else {
                                             positive.push(lemma);
                                         }
@@ -175,7 +175,7 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                                     if (negation) {
                                         positive_array.push(score * -1);
                                         if (positive.find((element: any) => element === lemma)) {
-                                            console.log("positive already in array: " + lemma);
+                                            //console.log("positive already in array: " + lemma);
                                         } else {
                                             positive.push(lemma);
                                         }
@@ -183,18 +183,18 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                                     } else {
                                         negative_array.push(score);
                                         if (negative.find((element: any) => element === lemma)) {
-                                            console.log("negative already in array: " + lemma);
+                                            //console.log("negative already in array: " + lemma);
                                         } else {
                                             negative.push(lemma);
                                         }
                                     }
                                 }
-                                console.log("vader score: " + score);
+                                //console.log("vader score: " + score);
                             } else {
-                                console.log("not in vader: " + lemma);
+                                //console.log("not in vader: " + lemma);
                             }
 
-                            console.log("\tlexicon_count: " + lexicon_count);
+                            //console.log("\tlexicon_count: " + lexicon_count);
                             // console.log("positive_array: "+positive_array);
                             // console.log("negative_array: "+negative_array);
 
@@ -214,16 +214,16 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                         });
                         //koniec petli dla kazdego lemmatu
 
-                        console.log("positive: " + pos);
-                        console.log("negative: " + neg);
+                        // console.log("positive: " + pos);
+                        // console.log("negative: " + neg);
 
-                        console.log("positive_array: " + positive);
-                        console.log("negative_array: " + negative);
+                        // console.log("positive_array: " + positive);
+                        // console.log("negative_array: " + negative);
 
                         Scores.push({ pos: pos, neg: neg });
-                        console.log("Scores: " + Scores);
+                        //console.log("Scores: " + Scores);
 
-                        console.log("\n\n---------------------------\n\n");
+                        //console.log("\n\n---------------------------\n\n");
 
                         if (pos > neg * -1) {
                             Results = [...Results, { sentence: part, pos: pos, neg: neg, sentiment: "positive" }];

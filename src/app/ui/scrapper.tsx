@@ -40,7 +40,7 @@ export const Scrapper = (props: singleProps) => {
 
   const [number, setNumber] = React.useState("500");
 
-  const [label, setLabel] = React.useState("SImple mode");
+  const [label, setLabel] = React.useState("Simple mode");
   const [advanced, setAdvanced] = React.useState(false);
 
   const onChangeSwitch = (

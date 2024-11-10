@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 type InputData = {
     result: {
-      [key: string]: number[];
+      [key: string]: number[][];
     }[];
   };
   
@@ -18,13 +18,9 @@ type InputData = {
   
     inputData.result.forEach((item) => {
       const sentence = Object.keys(item)[0];
-      const pos = Math.round(item[sentence][0]*100)/100;
-      const neg = Math.round(item[sentence][1]*100)/100;
+      const [pos, neg] = item[sentence][0];
   
-      console.log(pos);
-      console.log(neg);
-
-      const sentiment = pos > Math.abs(neg) ? 'positive' : neg != -0.5 ? 'negative' : 'neutral';
+      const sentiment = pos > Math.abs(neg) ? 'positive' : neg < 0 ? 'negative' : 'neutral';
   
       scores.push({ pos, neg });
       results.push({ sentence, pos, neg, sentiment });
