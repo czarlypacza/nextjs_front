@@ -19,6 +19,7 @@ export default async function Companies({
     //const [companies, setCompanies] = React.useState<any[]>([]);
 
     const data = await fetch(`/api/companies?query=${query}&tags=${tags}`).then((res) => res.json());
+    console.log("data: " +data);
 
     // const searchParams = useSearchParams();
     //const pathname = usePathname();
@@ -58,7 +59,7 @@ export default async function Companies({
                         </Text>
                     </div>
 
-                    {data.map((company: Company) => (
+                    {data.length != 0 ? data.map((company: Company) => (
                         <>
                             <div key={company.id} className="flex  justify-between pt-3 ps-2">
                                 <Text size={300} weight="regular" >
@@ -70,7 +71,7 @@ export default async function Companies({
                             </div>
                             <Divider style={{zIndex:1}}/>
                         </>
-                    ))}
+                    )) : <div className="flex flex-col items-center mt-16"><Text size={400} weight="semibold">Input name or select Categories</Text></div>}
                 </div>
             </div>
         </Card>

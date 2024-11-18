@@ -1,0 +1,28 @@
+Machine learning: 
+    Single:
+        - dziala na krotkie i dlugie zdania.
+        - daje zadowalajace wyniki (7/10)
+        - brak neutralnego
+        - binarne klasy
+    Scrapper:
+        - dziala do 1100 recenzji scrappowanych ale dziala strasznie dlugo wtedy
+        - ogolnie dziala dlugo
+        - wyniki zadowalajce jednak brakuje im neutralnego
+
+Rule based:
+    Single:
+        - dziala na krotkie i dlugie zdania.
+        - bardzo dobre wyniki (9/10) ale ma problem z neutralnoscia
+        - ogolnie jestem zadowolony
+    Scrapper:
+        - super szybki
+        - dokadny i daje rzeczywiste w odczuciu wyniki
+
+Hybrid:
+    Single:
+        - Dobre wyniki, tylko neutralny jest troche w strone pozytywnego
+    Scrapper:
+        - dorwnuje szybkoscia metodzie slownikowej
+        - daje tak samo dobre wyniki jak metoda slownikowa
+
+

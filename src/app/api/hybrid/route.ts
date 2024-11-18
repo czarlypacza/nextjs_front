@@ -38,13 +38,15 @@ type InputData = {
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const company = searchParams.get('company');
+    const limit = searchParams.get('limit');
+
 
     if (!company) {
         return NextResponse.json({ error: 'Company name is required' }, { status: 400 });
     }
 
     try {
-        const sentimentData = await fetch(`http://192.168.0.140:5001/sentiment/${company}`).then((res) => res.json());
+        const sentimentData = await fetch(`http://192.168.0.140:5001/sentiment/${company}?limit=${limit}`).then((res) => res.json());
 
         console.log(sentimentData);
         const convertedData = convertData(JSON.stringify(sentimentData));
