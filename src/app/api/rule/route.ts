@@ -314,6 +314,9 @@ export async function GET(req: NextRequest) {
 
     try {
         const reviews = await fetchReviews(company, limit);
+        if (reviews.error) {
+            return NextResponse.json(reviews, { status: 404 });
+        }
         const sentimentData = await analyzeSentiment(reviews[company]?.map((review: { text: any; }) => ({ text: review.text })));
         return NextResponse.json(sentimentData);
     } catch (error) {

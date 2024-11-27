@@ -43,7 +43,9 @@ export async function GET(req: NextRequest) {
 
     try {
         const sentimentData = await fetch(`http://192.168.0.140:5002/sentiment/${company}?limit=${limit}`).then((res) => res.json());
-
+        if (sentimentData.error) {
+          return NextResponse.json(sentimentData, { status: 404 });
+        }
         console.log("sentiment data:\n\n"+sentimentData);
         const convertedData = convertData(JSON.stringify(sentimentData));
 
