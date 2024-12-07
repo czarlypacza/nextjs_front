@@ -1,0 +1,55 @@
+{
+  "standardResults": {
+    "datasetType": "standard",
+    "timeTaken": 3574,
+    "accuracy": 0.683,
+    "precision": {
+      "positive": 0.8113207547169812,
+      "negative": 0.9306167400881057
+    },
+    "recall": {
+      "positive": 0.9502762430939227,
+      "negative": 0.7511111111111111
+    },
+    "f1Score": {
+      "positive": 0.8753180661577609,
+      "negative": 0.8312838170191833
+    },
+    "totalSamples": 3000,
+    "correctPredictions": 2049,
+    "neutralStats": {
+      "total": 608,
+      "missedPositives": 233,
+      "missedNegatives": 375,
+      "percentage": 20.266666666666666
+    },
+    "detailedResults": [   ]
+  },
+  "twitterResults": {
+    "datasetType": "twitter",
+    "timeTaken": 1089248,
+    "accuracy": 0.5333692437368764,
+    "precision": {
+      "positive": 0.663526230394808,
+      "negative": 0.7691697067963789
+    },
+    "recall": {
+      "positive": 0.8177976269830689,
+      "negative": 0.5941577079636781
+    },
+    "f1Score": {
+      "positive": 0.7326286874477488,
+      "negative": 0.6704304557767047
+    },
+    "totalSamples": 200499,
+    "correctPredictions": 106940,
+    "neutralStats": {
+      "total": 48841,
+      "missedPositives": 25209,
+      "missedNegatives": 23576,
+      "percentage": 24.359722492381508,
+      "trueNeutrals": 56
+    },
+    "detailedResults": [   ]
+  }
+}

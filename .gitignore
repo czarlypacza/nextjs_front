@@ -44,6 +44,5 @@ src/app/api/rule/training.1600000.processed.noemoticon.csv
 src/app/api/rule/test_twitter.csv
 src/app/api/rule/Untitled-1.json
 src/app/api/rule/Untitled-2.json
-src/app/api/rule/results.json
 src/app/api/rule/testdata.manual.2009.06.14.csv
 src/app/api/rule/analysisResults.json
