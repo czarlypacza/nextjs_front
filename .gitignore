@@ -36,3 +36,12 @@ yarn-error.log*
 next-env.d.ts
 
 /prisma/
+src/app/api/rule/filename.csv
+
+src/app/api/rule/Test_1.json
+src/app/api/rule/training.1600000.processed.noemoticon copy.csv
+src/app/api/rule/training.1600000.processed.noemoticon.csv
+src/app/api/rule/test_twitter.csv
+src/app/api/rule/Untitled-1.json
+src/app/api/rule/Untitled-2.json
+src/app/api/rule/results.json

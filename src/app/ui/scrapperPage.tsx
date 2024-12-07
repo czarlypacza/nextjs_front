@@ -13,26 +13,27 @@ type singleProps = {
     searchParams?: {
         query?: string;
         tags?: string;
-      };
+    };
 };
 
 export default function ScrapperPage(props: singleProps) {
 
 
     return (
-        <div className="flex flex-row mt-2 justify-around gap-8">
-            <div className="flex max-w-xl grow justify-center" style={{height: "70vh"}} >
+        <div className="mt-2 grid grid-cols-3 gap-8">
+            <div className="flex max-w-xl grow justify-center" style={{ height: "80vh" }} >
                 <Suspense fallback={<CompaniesSkeleton />}>
-                    <Companies searchParams={props.searchParams}/>
+                    <Companies searchParams={props.searchParams} />
                 </Suspense>
             </div>
 
-            <Scrapper type={props.type}
-                result={props.result}
-                setResult={props.setResult}
-                value={props.value}
-                setValue={props.setValue} />
-
+            <div className="grid col-span-2">
+                <Scrapper type={props.type}
+                    result={props.result}
+                    setResult={props.setResult}
+                    value={props.value}
+                    setValue={props.setValue} />
+            </div>
         </div>
     );
 }

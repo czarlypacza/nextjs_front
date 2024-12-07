@@ -9,6 +9,8 @@ import {
 
   Text,
   Body1Stronger,
+  SwitchOnChangeData,
+  Switch,
 } from "@fluentui/react-components";
 import {
   BeakerSettingsFilled,
@@ -77,6 +79,8 @@ export const Single = (props: singleProps) => {
       body: JSON.stringify({ documents }),
     });
 
+    console.log(JSON.stringify({ documents }));
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -103,6 +107,25 @@ export const Single = (props: singleProps) => {
     return data.results;
   };
 
+  const sentimentMachine = async (text: string) => {
+    setLoading(true);
+    const response = await fetch("/api/machine", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: text }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    return data.results;
+  }
+
+
   const analyze = () => {
     if (!props.value) {
       return;
@@ -115,6 +138,10 @@ export const Single = (props: singleProps) => {
         }
       );
     } else if (props.type === "ml") {
+      sentimentMachine(props.value).then((data) => {
+        props.setResult(data);
+        setLoading(false);
+      });
     } else {
       sentimentHybrid(props.value).then((data) => {
         props.setResult(data);
@@ -129,6 +156,18 @@ export const Single = (props: singleProps) => {
     setPositive(0);
     setNegative(0);
   };
+
+  const [label, setLabel] = React.useState("SImple mode");
+  const [advanced, setAdvanced] = React.useState(false);
+
+  const onChangeSwitch = (
+    ev: React.ChangeEvent<HTMLInputElement>,
+    data: SwitchOnChangeData
+  ) => {
+    setAdvanced(data.checked);
+    setLabel(data.checked ? "Advanced mode" : "Simple mode");
+  };
+
 
   return (
     <div className="flex flex-col gap-8 mt-2">
@@ -161,6 +200,12 @@ export const Single = (props: singleProps) => {
           <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
             Clear
           </Button>
+          <Switch
+            label={label}
+            labelPosition="after"
+            checked={advanced}
+            onChange={onChangeSwitch}
+          />
         </CardFooter>
       </Card>
 
@@ -173,7 +218,7 @@ export const Single = (props: singleProps) => {
         loading == true ? (  
           <ResultsSkeleton  />
         ):(
-          <Results positive={positive} negative={negative} result={props.result} />
+          <Results positive={positive} negative={negative} result={props.result} advanced={advanced}/>
         )
         
       )}

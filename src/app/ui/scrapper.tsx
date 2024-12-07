@@ -8,6 +8,8 @@ import {
   Text,
   Body1Stronger,
   Field,
+  Switch,
+  SwitchOnChangeData,
 } from "@fluentui/react-components";
 import {
   BeakerSettingsFilled,
@@ -29,6 +31,7 @@ type singleProps = {
 export const Scrapper = (props: singleProps) => {
   //const [value, setValue] = React.useState("");
   const [loading, setLoading] = useState(false);
+  const [messeage, setMesseage] = useState("");
 
   //const [result, setResult] = React.useState([]);
   const [positive, setPositive] = React.useState(0);
@@ -38,11 +41,27 @@ export const Scrapper = (props: singleProps) => {
 
   const [number, setNumber] = React.useState("500");
 
+  const [label, setLabel] = React.useState("Simple mode");
+  const [advanced, setAdvanced] = React.useState(false);
+
+  const onChangeSwitch = (
+    ev: React.ChangeEvent<HTMLInputElement>,
+    data: SwitchOnChangeData
+  ) => {
+    setAdvanced(data.checked);
+    setLabel(data.checked ? "Advanced mode" : "Simple mode");
+  };
+
   const onChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
     setValue(data.value.toString());
   };
 
   const onNumberChange = (ev: any, data: { value: React.SetStateAction<string> }) => {
+    const maxReviews = process.env.NEXT_PUBLIC_MAX_REVIEWS!;
+    console.log(maxReviews);
+    if (parseInt(data.value.toString()) > parseInt(maxReviews) || parseInt(data.value.toString()) <= 0) {
+      data.value = maxReviews;
+    }
     setNumber(data.value.toString());
   }
 
@@ -62,6 +81,13 @@ export const Scrapper = (props: singleProps) => {
   async function rule_click() {
     setLoading(true);
     const response = await fetch(`/api/rule?company=${value}&limit=${number}`);
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      const responseText = await response.json();
+      setMesseage(`${response.status}: ${responseText.error}`);
+      setLoading(false);
+      throw new Error(message);
+    }
     const data = await response.json();
     console.log(data);
 
@@ -72,7 +98,31 @@ export const Scrapper = (props: singleProps) => {
   async function hybrid_click() {
     setLoading(true);
     const response = await fetch(`/api/hybrid?company=${value}&limit=${number}`);
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      const responseText = await response.json();
+      setMesseage(`${response.status}: ${responseText.error}`);
+      setLoading(false);
+      throw new Error(message);
+    }
     const data = await response.json();
+
+    props.setResult(data.results);
+    return data;
+  }
+
+  async function ml_click() {
+    setLoading(true);
+    const response = await fetch(`/api/machine?company=${value}&limit=${number}`);
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      const responseText = await response.json();
+      setMesseage(`${response.status}: ${responseText.error}`);
+      setLoading(false);
+      throw new Error(message);
+    }
+    const data = await response.json();
+    console.log(data);
 
     props.setResult(data.results);
     return data;
@@ -88,6 +138,10 @@ export const Scrapper = (props: singleProps) => {
         props.setValue(value);
       });
     } else if (props.type === "ml") {
+      ml_click().then(() => {
+        setLoading(false);
+        props.setValue(value);
+      });
     } else {
       hybrid_click().then(() => {
         setLoading(false);
@@ -110,13 +164,18 @@ export const Scrapper = (props: singleProps) => {
 
 
 
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-4">
       <Card className="mr-10">
         <CardHeader
           header={
-            <Text size={500} weight="semibold">
-              Input name of company you want to analyze. woodcore
-            </Text>
+            <>
+              <Text size={500} weight="semibold">
+                Input name of company you want to analyze.
+              </Text>
+              <Text size={500} weight="bold" color="red">
+                {messeage}
+              </Text>
+            </>
           }
         />
         <Input
@@ -147,6 +206,12 @@ export const Scrapper = (props: singleProps) => {
           <Button icon={<DeleteDismissFilled fontSize={16} />} onClick={clear}>
             Clear
           </Button>
+          <Switch
+            label={label}
+            labelPosition="after"
+            checked={advanced}
+            onChange={onChangeSwitch}
+          />
         </CardFooter>
       </Card>
       {(props.result.length === 0 && loading == false) ? (
@@ -157,7 +222,7 @@ export const Scrapper = (props: singleProps) => {
         loading == true ? (
           <ResultsSkeleton />
         ) : (
-          <Results positive={positive} negative={negative} result={props.result} />
+          <Results positive={positive} negative={negative} result={props.result} advanced={advanced} />
         )
       )}
     </div>

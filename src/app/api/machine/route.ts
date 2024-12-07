@@ -15,17 +15,14 @@ type InputData = {
     const inputData: InputData = JSON.parse(input);
     const scores: { pos: number; neg: number }[] = [];
     const results: { sentence: string; pos: number; neg: number; sentiment: string }[] = [];
-
+  
     inputData.result.forEach((item) => {
       const sentence = Object.keys(item)[0];
-      const pos = Math.round(item[sentence][0]*100)/100;
-      const neg = Math.round(item[sentence][1]*100)/100;
-  
-      console.log(pos);
-      console.log(neg);
+      const itemScores = item[sentence];
+      const pos = itemScores[1];
+      const neg = itemScores[0];
+      const sentiment = pos > neg ? 'positive' : pos == neg ? 'neutral' : 'negative';
 
-      const sentiment = pos > Math.abs(neg) ? 'positive' : neg != -0.5 ? 'negative' : 'neutral';
-  
       scores.push({ pos, neg });
       results.push({ sentence, pos, neg, sentiment });
     });
@@ -40,17 +37,16 @@ export async function GET(req: NextRequest) {
     const company = searchParams.get('company');
     const limit = searchParams.get('limit');
 
-
     if (!company) {
         return NextResponse.json({ error: 'Company name is required' }, { status: 400 });
     }
 
     try {
-        const sentimentData = await fetch(`http://192.168.0.140:5001/sentiment/${company}?limit=${limit}`).then((res) => res.json());
+        const sentimentData = await fetch(`http://192.168.0.140:5002/sentiment/${company}?limit=${limit}`).then((res) => res.json());
         if (sentimentData.error) {
           return NextResponse.json(sentimentData, { status: 404 });
         }
-        console.log(sentimentData);
+        console.log("sentiment data:\n\n"+sentimentData);
         const convertedData = convertData(JSON.stringify(sentimentData));
 
         return NextResponse.json(convertedData);
@@ -64,7 +60,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     console.log(body);
     try {
-        const sentimentData = await fetch('http://192.168.0.140:5001/sentiment', {
+        const sentimentData = await fetch('http://192.168.0.140:5002/sentiment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
