@@ -1,7 +1,7 @@
 {
   "standardResults": {
     "datasetType": "standard",
-    "timeTaken": 3574,
+    "timeTaken": 1141,
     "accuracy": 0.683,
     "precision": {
       "positive": 0.8113207547169812,
@@ -21,25 +21,28 @@
       "total": 608,
       "missedPositives": 233,
       "missedNegatives": 375,
-      "percentage": 20.266666666666666
-    },
-    "detailedResults": [   ]
+      "percentage": 20.266666666666666,
+      "trueNeutrals": null
+    }
   },
   "twitterResults": {
     "datasetType": "twitter",
-    "timeTaken": 1089248,
+    "timeTaken": 951354,
     "accuracy": 0.5333692437368764,
     "precision": {
       "positive": 0.663526230394808,
-      "negative": 0.7691697067963789
+      "negative": 0.7691697067963789,
+      "neutral": 0.001146577670399869
     },
     "recall": {
       "positive": 0.8177976269830689,
-      "negative": 0.5941577079636781
+      "negative": 0.5941577079636781,
+      "neutral": 0.001146577670399869
     },
     "f1Score": {
       "positive": 0.7326286874477488,
-      "negative": 0.6704304557767047
+      "negative": 0.6704304557767047,
+      "neutral": 0.001146577670399869
     },
     "totalSamples": 200499,
     "correctPredictions": 106940,
@@ -49,7 +52,35 @@
       "missedNegatives": 23576,
       "percentage": 24.359722492381508,
       "trueNeutrals": 56
+    }
+  },
+  "additionalResults": {
+    "datasetType": "additional",
+    "timeTaken": 26784,
+    "accuracy": 0.6301080746697718,
+    "precision": {
+      "positive": 0.5656656207978485,
+      "negative": 0.6637763685777145,
+      "neutral": 0.7247173366834171
     },
-    "detailedResults": [   ]
+    "recall": {
+      "positive": 0.744542772861357,
+      "negative": 0.4687014529836425,
+      "neutral": 0.7247173366834171
+    },
+    "f1Score": {
+      "positive": 0.6428935303107489,
+      "negative": 0.549437600428495,
+      "neutral": 0.7247173366834171
+    },
+    "totalSamples": 27481,
+    "correctPredictions": 17316,
+    "neutralStats": {
+      "total": 6368,
+      "missedPositives": 600,
+      "missedNegatives": 1153,
+      "percentage": 23.172373639969436,
+      "trueNeutrals": 4615
+    }
   }
 }

@@ -336,28 +336,66 @@ import path from 'path';
 // const posTagger = require('wink-pos-tagger');
 // const vader = require('vader-sentiment');
 // Ensure these are correctly imported or required
+// Update your PUT endpoint to include the additional dataset
 export async function PUT(req: NextRequest) {
     try {
         const dataDir = path.join(process.cwd(), 'src', 'app', 'api', 'rule');
-        
-        // Load and analyze regular dataset
+
+        // Analyze standard dataset
         const standardResults = await analyzeStandardDataset(dataDir);
-        
-        // Load and analyze Twitter dataset
+
+        // Analyze Twitter dataset
         const twitterResults = await analyzeTwitterDataset(dataDir);
 
-        fs.writeFileSync(path.join(dataDir, 'results.json'), JSON.stringify({ standardResults, twitterResults }, null, 2));
+        // **Add the new function call to analyze the additional dataset**
+        const additionalResults = await analyzeAdditionalDataset(dataDir);
+
+        // Save results
+        const allResults = {
+            standardResults,
+            twitterResults,
+            additionalResults
+        };
+
+        fs.writeFileSync(path.join(dataDir, 'results.json'), JSON.stringify(allResults, null, 2));
 
         // Return combined results
-        return NextResponse.json({
-            standardDataset: standardResults,
-            twitterDataset: twitterResults
-        }, { status: 200 });
+        return NextResponse.json(allResults, { status: 200 });
     } catch (error) {
         console.error('Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
+
+// Function to analyze the additional dataset
+async function analyzeAdditionalDataset(dataDir: string) {
+    const additionalFile = path.join(dataDir, 'train.jsonl');
+    const additionalData: { text: string; sentiment: string }[] = [];
+
+    // Read the JSONL file line by line
+    const fileContent = fs.readFileSync(additionalFile, 'utf-8');
+    const lines = fileContent.split('\n');
+
+    for (const line of lines) {
+        if (line.trim() === '') continue;
+        try {
+            const entry = JSON.parse(line.trim());
+            // Assuming the JSON lines have 'text' and 'label_text' fields
+            const text = entry.text;
+            const sentiment = entry.label_text.toLowerCase(); // Ensure the sentiment label is in lowercase
+            additionalData.push({ text, sentiment });
+        } catch (err) {
+            // Handle JSON parsing error
+            console.error('Error parsing line:', line);
+            continue;
+        }
+    }
+
+    // Analyze the dataset and calculate metrics
+    return await calculateMetrics(additionalData, 'additional');
+}
+
+
 
 async function analyzeStandardDataset(dataDir: string) {
     const files = ['imdb_labelled.txt', 'yelp_labelled.txt', 'amazon_cells_labelled.txt'];
@@ -395,33 +433,25 @@ async function analyzeTwitterDataset(dataDir: string) {
 
 async function calculateMetrics(testData: { text: string; sentiment: string }[], datasetType: string) {
     const startTime = Date.now();
-    
-    // Run analysis
     const analysisResults = await analyzeSentiment(testData.map(item => ({ text: item.text })));
-    
-    const endTime = Date.now();
-    const timeTaken = endTime - startTime;
+    const timeTaken = Date.now() - startTime;
 
     let correct = 0;
     const total = testData.length;
 
+    // Initialize counters
     let truePositives = 0;
     let trueNegatives = 0;
     let trueNeutrals = 0;
     let falsePositives = 0;
     let falseNegatives = 0;
+    let falseNeutrals = 0;
     let neutralPredictions = 0;
     let neutralPositiveMisses = 0;
     let neutralNegativeMisses = 0;
 
-    const detailedResults: {
-        text: string;
-        originalSentiment: string;
-        pos: number;
-        neg: number;
-        calculatedSentiment: string;
-        analyzedParts?: { sentence: string; pos: number; neg: number; sentiment: string; }[];
-    }[] = [];
+    // Check if dataset includes neutral class
+    const neutral_in_dataset = testData.some(item => item.sentiment === 'neutral');
 
     let currentIndex = 0;
     for (let i = 0; i < testData.length; i++) {
@@ -452,9 +482,11 @@ async function calculateMetrics(testData: { text: string; sentiment: string }[],
             neutralPredictions++;
             if (expected === 'positive') {
                 neutralPositiveMisses++;
+                falseNeutrals++;
             } else if (expected === 'negative') {
                 neutralNegativeMisses++;
-            } else {
+                falseNeutrals++;
+            } else if (expected === 'neutral') {
                 correct++;
                 trueNeutrals++;
             }
@@ -472,18 +504,11 @@ async function calculateMetrics(testData: { text: string; sentiment: string }[],
                 falseNegatives++;
             }
         }
-
-        detailedResults.push({
-            text: originalText,
-            originalSentiment: expected,
-            pos: combinedPos,
-            neg: combinedNeg,
-            calculatedSentiment: predicted,
-            analyzedParts: parts
-        });
     }
 
     const accuracy = correct / total;
+    
+    // Calculate base metrics
     const precisionPositive = truePositives / (truePositives + falsePositives || 1);
     const recallPositive = truePositives / (truePositives + falseNegatives || 1);
     const f1Positive = 2 * (precisionPositive * recallPositive) / (precisionPositive + recallPositive || 1);
@@ -492,34 +517,52 @@ async function calculateMetrics(testData: { text: string; sentiment: string }[],
     const recallNegative = trueNegatives / (trueNegatives + falsePositives || 1);
     const f1Negative = 2 * (precisionNegative * recallNegative) / (precisionNegative + recallNegative || 1);
 
-    // Complete the return object in calculateMetrics
-return {
-    datasetType,
-    timeTaken,
-    accuracy,
-    precision: {
-        positive: precisionPositive,
-        negative: precisionNegative
-    },
-    recall: {
-        positive: recallPositive,
-        negative: recallNegative
-    },
-    f1Score: {
-        positive: f1Positive,
-        negative: f1Negative
-    },
-    totalSamples: total,
-    correctPredictions: correct,
-    neutralStats: {
-        total: neutralPredictions,
-        missedPositives: neutralPositiveMisses,
-        missedNegatives: neutralNegativeMisses,
-        percentage: (neutralPredictions / total) * 100,
-        trueNeutrals: datasetType === 'twitter' ? trueNeutrals : undefined
-    },
-    //detailedResults
-};
+    // Calculate neutral metrics if present in dataset
+    let precisionNeutral = null;
+    let recallNeutral = null;
+    let f1Neutral = null;
+
+    if (neutral_in_dataset) {
+        precisionNeutral = trueNeutrals / (trueNeutrals + falseNeutrals || 1);
+        recallNeutral = trueNeutrals / (trueNeutrals + falseNeutrals || 1);
+        f1Neutral = 2 * (precisionNeutral * recallNeutral) / (precisionNeutral + recallNeutral || 1);
+    }
+
+    const result: any = {
+        datasetType,
+        timeTaken,
+        accuracy,
+        precision: {
+            positive: precisionPositive,
+            negative: precisionNegative
+        },
+        recall: {
+            positive: recallPositive,
+            negative: recallNegative
+        },
+        f1Score: {
+            positive: f1Positive,
+            negative: f1Negative
+        },
+        totalSamples: total,
+        correctPredictions: correct,
+        neutralStats: {
+            total: neutralPredictions,
+            missedPositives: neutralPositiveMisses,
+            missedNegatives: neutralNegativeMisses,
+            percentage: (neutralPredictions / total) * 100,
+            trueNeutrals: neutral_in_dataset ? trueNeutrals : null
+        }
+    };
+
+    // Add neutral metrics if applicable
+    if (neutral_in_dataset) {
+        result.precision.neutral = precisionNeutral;
+        result.recall.neutral = recallNeutral;
+        result.f1Score.neutral = f1Neutral;
+    }
+
+    return result;
 }
 
 // Function to load Twitter data
