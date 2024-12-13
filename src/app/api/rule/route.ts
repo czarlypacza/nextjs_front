@@ -357,7 +357,7 @@ export async function PUT(req: NextRequest) {
             additionalResults
         };
 
-        fs.writeFileSync(path.join(dataDir, 'results.json'), JSON.stringify(allResults, null, 2));
+        fs.writeFileSync(path.join(dataDir, 'results_new_win.json'), JSON.stringify(allResults, null, 2));
 
         // Return combined results
         return NextResponse.json(allResults, { status: 200 });
@@ -439,13 +439,23 @@ async function calculateMetrics(testData: { text: string; sentiment: string }[],
     let correct = 0;
     const total = testData.length;
 
-    // Initialize counters
+    // Positive metrics
     let truePositives = 0;
-    let trueNegatives = 0;
-    let trueNeutrals = 0;
+    let falseNegatives_positive = 0;
     let falsePositives = 0;
+
+
+    // Negative metrics
+    let trueNegatives = 0;
+    let falseNegatives_negative = 0;
     let falseNegatives = 0;
+
+
+    let trueNeutrals = 0;
+    let falseNegatives_neutral = 0;
     let falseNeutrals = 0;
+
+
     let neutralPredictions = 0;
     let neutralPositiveMisses = 0;
     let neutralNegativeMisses = 0;
@@ -483,38 +493,65 @@ async function calculateMetrics(testData: { text: string; sentiment: string }[],
             if (expected === 'positive') {
                 neutralPositiveMisses++;
                 falseNeutrals++;
+                falseNegatives_positive++;
             } else if (expected === 'negative') {
                 neutralNegativeMisses++;
                 falseNeutrals++;
+                falseNegatives_negative++;
             } else if (expected === 'neutral') {
                 correct++;
                 trueNeutrals++;
             }
-        } else if (predicted === expected) {
-            correct++;
-            if (predicted === 'positive') {
+        }else if (predicted === 'positive') {
+            if (expected === 'positive') {
+                correct++;
                 truePositives++;
-            } else if (predicted === 'negative') {
-                trueNegatives++;
-            }
-        } else {
-            if (predicted === 'positive') {
+            } else if (expected === 'negative') {
                 falsePositives++;
-            } else {
+                falseNegatives_negative++;
+            } else if (expected === 'neutral') {
+                falseNegatives_neutral++;
+                falsePositives++;
+            }
+        } else if (predicted === 'negative') {
+            if (expected === 'negative') {
+                correct++;
+                trueNegatives++;
+            } else if (expected === 'positive') {
                 falseNegatives++;
+                falseNegatives_positive++;
+            } else if (expected === 'neutral') {
+                falseNegatives++;
+                falseNegatives_neutral++;
             }
         }
+
+
+        // } else if (predicted === expected) {
+        //     correct++;
+        //     if (predicted === 'positive') {
+        //         truePositives++;
+        //     } else if (predicted === 'negative') {
+        //         trueNegatives++;
+        //     }
+        // } else {
+        //     if (predicted === 'positive') {
+        //         falsePositives++;
+        //     } else {
+        //         falseNegatives++;
+        //     }
+        // }
     }
 
     const accuracy = correct / total;
     
     // Calculate base metrics
     const precisionPositive = truePositives / (truePositives + falsePositives || 1);
-    const recallPositive = truePositives / (truePositives + falseNegatives || 1);
+    const recallPositive = truePositives / (truePositives + falseNegatives_positive || 1);
     const f1Positive = 2 * (precisionPositive * recallPositive) / (precisionPositive + recallPositive || 1);
 
     const precisionNegative = trueNegatives / (trueNegatives + falseNegatives || 1);
-    const recallNegative = trueNegatives / (trueNegatives + falsePositives || 1);
+    const recallNegative = trueNegatives / (trueNegatives + falseNegatives_negative || 1);
     const f1Negative = 2 * (precisionNegative * recallNegative) / (precisionNegative + recallNegative || 1);
 
     // Calculate neutral metrics if present in dataset
@@ -524,7 +561,7 @@ async function calculateMetrics(testData: { text: string; sentiment: string }[],
 
     if (neutral_in_dataset) {
         precisionNeutral = trueNeutrals / (trueNeutrals + falseNeutrals || 1);
-        recallNeutral = trueNeutrals / (trueNeutrals + falseNeutrals || 1);
+        recallNeutral = trueNeutrals / (trueNeutrals + falseNegatives_neutral || 1);
         f1Neutral = 2 * (precisionNeutral * recallNeutral) / (precisionNeutral + recallNeutral || 1);
     }
 
