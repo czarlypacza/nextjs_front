@@ -12,7 +12,7 @@ const posTagger = require('wink-pos-tagger');
 const stopwords = ['a', 'an', 'the', 'in', 'is', 'are', /*...other stopwords...*/];
 const contrastiveConjunctions = ['but', 'however', 'although', 'nevertheless', 'yet', 'except', 'though'];
 
-const modifierWords: { [key in 'less' | 'more' | 'most' | 'least' | 'very' | 'slightly' | 'somewhat' | 'quite' | 'extremely' | 'barely' | 'hardly' | 'just']: number } = {
+const modifierWords: { [key in 'less' | 'more' | 'most' | 'least' | 'very' | 'slightly' | 'somewhat' | 'quite' | 'extremely' | 'barely' | 'hardly' | 'just'|'really']: number } = {
     'less': 0.5,
     'more': 1.5,
     'most': 2,
@@ -24,7 +24,8 @@ const modifierWords: { [key in 'less' | 'more' | 'most' | 'least' | 'very' | 'sl
     'extremely': 2.5,
     'barely': 0.5,
     'hardly': 0.5,
-    'just': 0.75
+    'just': 0.75,
+    'really': 2
 };
 
 let positive: string[] = [];
@@ -145,9 +146,9 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                                         //jezeli znaleziono słowo to dadaj jego wynik do tablicy i zwieksz licznik
                                     }
                                 }
-                                // console.log("afinn165 score: " + score);
+                                console.log("afinn165 score: " + score);
                             } else {
-                                // console.log("not in afinn165: " + lemma);
+                                console.log("not in afinn165: " + lemma);
                             }
 
                             const vader = require('vader-sentiment');
@@ -190,26 +191,29 @@ const analyzeSentiment = (newdocuments2: { text: string }[]): Promise<{ scores: 
                                         }
                                     }
                                 }
-                                // console.log("vader score: " + score);
+                                console.log("vader score: " + score);
                             } else {
-                                // console.log("not in vader: " + lemma);
+                                console.log("not in vader: " + lemma);
                             }
 
                             // console.log("\tlexicon_count: " + lexicon_count);
-                            // console.log("positive_array: "+positive_array);
-                            // console.log("negative_array: "+negative_array);
+                            console.log("positive_array: "+positive_array);
+                            console.log("negative_array: "+negative_array);
 
                             if (positive_array.length > 0) {//jezeli tablica wyników nie jest pusta należy zsumowac wyniki i podzielic przez ilosc słowników
                                 const sum = positive_array.reduce(function (a, b) {
                                     return a + b;
                                 }, 0);
+                                console.log("sum: " + sum);
                                 pos += (sum / lexicon_count) * weight; //dodanie wyniku do ostatecznego wyniku
+                                console.log("pos: " + pos);
                             }
                             if (negative_array.length > 0) {
                                 const sum = negative_array.reduce(function (a, b) {
                                     return a + b;
                                 }, 0);
                                 neg += (sum / lexicon_count) * weight;
+                                console.log("neg: " + neg);
                             }
 
                         });

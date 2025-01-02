@@ -14,8 +14,8 @@ type analyzerProps = {
 };
 
 export const Analyzer = (props: analyzerProps) => {
-  const [checked, setChecked] = React.useState(false);
-  const [label, setLabel] = React.useState("Single sentence");
+  const [checked, setChecked] = React.useState(props.type === "rule" ? false : true);
+  const [label, setLabel] = React.useState(props.type === "rule" ? "Single sentence": "Scrapper");
 
   const [resultSingle, setResultSingle] = React.useState([]);
   const [valueSingle, setValueSingle] = React.useState("");

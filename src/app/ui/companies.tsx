@@ -46,9 +46,9 @@ export default async function Companies({
                 >
                     <SearchBox onChange={handleSearch} />
                 </Field> */}
-
-                <CompanySearch />
                 <CompanyTags />
+                <CompanySearch />
+                
                 <div >
                 <div className="sticky -top-2  z-10 flex justify-between pt-3 ps-2 pb-2" style={{backgroundColor: 'var(--colorNeutralBackground1)'}}>
                         <Text size={400} weight="bold">

@@ -81,11 +81,11 @@ const HybridIcon = bundleIcon(HybridFilled, HybridRegular);
 
 const links = [
   {id:"1", name: 'Home', href: '/sentiment', icon: <Dashboard/> },
-  {id:"2",
-    name: 'Machine Learning',
-    href: '/sentiment/machine',
-    icon: <Announcements/>,
-  },
+  // {id:"2",
+  //   name: 'Machine Learning',
+  //   href: '/sentiment/machine',
+  //   icon: <Announcements/>,
+  // },
   {id:"3", name: 'Rule-based', href: '/sentiment/rule', icon: <EmployeeSpotlight/> },
   {id:"4", name: 'Hybrid', href: '/sentiment/hybrid', icon: <HybridIcon/>},
 ];
