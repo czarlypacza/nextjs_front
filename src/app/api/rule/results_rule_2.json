@@ -1,7 +1,7 @@
 {
   "standardResults": {
     "datasetType": "standard",
-    "timeTaken": 1099,
+    "timeTaken": 1151,
     "accuracy": 0.683,
     "precision": {
       "positive": 0.8113207547169812,
@@ -27,7 +27,7 @@
   },
   "twitterResults": {
     "datasetType": "twitter",
-    "timeTaken": 581127,
+    "timeTaken": 930067,
     "accuracy": 0.5333692437368764,
     "precision": {
       "positive": 0.663526230394808,
@@ -56,7 +56,7 @@
   },
   "additionalResults": {
     "datasetType": "additional",
-    "timeTaken": 19056,
+    "timeTaken": 25445,
     "accuracy": 0.6301080746697718,
     "precision": {
       "positive": 0.5656656207978485,
