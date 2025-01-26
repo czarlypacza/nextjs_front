@@ -157,7 +157,7 @@ export const Single = (props: singleProps) => {
     setNegative(0);
   };
 
-  const [label, setLabel] = React.useState("SImple mode");
+  const [label, setLabel] = React.useState("Simple mode");
   const [advanced, setAdvanced] = React.useState(false);
 
   const onChangeSwitch = (

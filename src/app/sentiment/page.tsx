@@ -1,4 +1,4 @@
-import { BookLetter20Filled, BrainCircuit20Filled } from "@fluentui/react-icons";
+import { BookLetter20Filled } from "@fluentui/react-icons";
 import { Selectable } from "../ui/selectable";
 import { HybridFilled } from "../ui/sidenav";
 

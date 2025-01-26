@@ -18,8 +18,8 @@ import {
 import {
   BookLetter20Filled,
   BookLetter20Regular,
-  BrainCircuit20Filled,
-  BrainCircuit20Regular,
+  // BrainCircuit20Filled,
+  // BrainCircuit20Regular,
   Home20Filled,
   Home20Regular,
   bundleIcon,
@@ -61,7 +61,7 @@ const useStyles = makeStyles({
 });
 
 const Dashboard = bundleIcon(Home20Filled, Home20Regular);
-const Announcements = bundleIcon(BrainCircuit20Filled, BrainCircuit20Regular);
+// const Announcements = bundleIcon(BrainCircuit20Filled, BrainCircuit20Regular);
 const EmployeeSpotlight = bundleIcon(
   BookLetter20Filled,
   BookLetter20Regular
