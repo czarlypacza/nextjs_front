@@ -10,18 +10,12 @@ const BreadcrumbsSkeleton = () => {
     //     <SkeletonItem size={28} />
     // </Skeleton>
     <div className={`${shimmer} relative overflow-hidden md:col-span-4 w-fit`}>
-      {/* <div className="mb-4 h-8 w-36 rounded-md bg-gray-100" /> */}
-      <div className="rounded-md  bg-opacity-55 w-fit p-1">
-        {/* <div className="mt-0 grid h-[410px] grid-cols-12 items-end gap-2 rounded-md bg-white p-4 sm:grid-cols-13 md:gap-4" /> */}
+      <div className="rounded-md bg-zinc-200 dark:bg-zinc-800 bg-opacity-55 w-fit p-1">
         <div className="flex items-center pb-1 pt-1 pl-1 pr-1 w-fit">
-          
-          <div className=" h-6 w-32 rounded-md bg-opacity-55 bg-zinc-700" />
-          
-          <div className="ml-2 h-6 w-32 rounded-md bg-opacity-55 bg-zinc-700" />
-          
+          <div className="h-6 w-32 rounded-md bg-zinc-200 dark:bg-zinc-700 bg-opacity-55" />
+          <div className="ml-2 h-6 w-32 rounded-md bg-zinc-200 dark:bg-zinc-700 bg-opacity-55" />
         </div>
       </div>
-      
     </div>
   );
 };

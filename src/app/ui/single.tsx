@@ -175,8 +175,7 @@ export const Single = (props: singleProps) => {
         <CardHeader
           header={
             <Text size={500} weight="semibold">
-              Input sentence you want to analyze. sample love positive. sample
-              neutral
+              Input sentence you want to analyze.
               {/* I can’t believe how amazing this day has been! The weather is just perfect today. I’m feeling a bit under the weather. This movie was absolutely fantastic! I’m not sure how I feel about this. The food at that restaurant was terrible. I had a wonderful time at the party. I’m really disappointed with the service. This book is so captivating! I don’t have any strong feelings about this. The concert was an unforgettable experience. I’m feeling quite neutral about the whole situation. The customer support was very helpful. I’m not impressed with the new update. This is the best coffee I’ve ever had! I’m feeling indifferent about the results. The new policy changes are very frustrating. I’m so excited for the weekend! The presentation was just okay. I’m really happy with my purchase. */}
             </Text>
           }

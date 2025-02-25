@@ -48,7 +48,7 @@ const ParticlesBackground = () => {
           value: "transparent",
         },
       },
-      fpsLimit: 120,
+      fpsLimit: 300,
       interactivity: {
         events: {
           onClick: {
@@ -72,10 +72,10 @@ const ParticlesBackground = () => {
       },
       particles: {
         color: {
-          value: "#ffffff",
+          value: "#B65FB5",
         },
         links: {
-          color: "#ffffff",
+          color: "#B65FB5",
           distance: 150,
           enable: true,
           opacity: 0.5,
@@ -95,16 +95,16 @@ const ParticlesBackground = () => {
           density: {
             enable: true,
           },
-          value: 100,
+          value: 80,
         },
         opacity: {
-          value: 0.5,
+          value: 1,
         },
         shape: {
           type: "circle",
         },
         size: {
-          value: { min: 1, max: 5 },
+          value: { min: 1, max: 3 },
         },
       },
       detectRetina: true,
